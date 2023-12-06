@@ -12,7 +12,7 @@ import { relationshipModuleConfig } from "../abi/relationshipModule.abi";
 import { waitTxAndFilterLog } from "../utils/utils";
 
 /**
- * Client for managing relationships.
+ * RelationshipTypeClient allows you to create, view and search relationship types on Story Protocol.
  */
 export class RelationshipTypeClient extends RelationshipTypeReadOnlyClient {
   private readonly wallet: WalletClient;

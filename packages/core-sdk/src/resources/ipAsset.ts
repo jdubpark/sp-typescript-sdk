@@ -9,7 +9,7 @@ import { registrationModuleConfig } from "../abi/registrationModule.abi";
 import { parseToBigInt, waitTxAndFilterLog, typedDataArrayToBytesArray } from "../utils/utils";
 
 /**
- * IpAssetClient allows you to create, view, and list IP Assets on Story Protocol.
+ * IpAssetClient allows you to create, view, and search IP Assets on Story Protocol.
  */
 export class IPAssetClient extends IPAssetReadOnlyClient {
   private readonly wallet: WalletClient;

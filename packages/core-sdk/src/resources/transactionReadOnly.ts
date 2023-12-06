@@ -10,8 +10,7 @@ import {
 } from "../types/resources/transaction";
 
 /**
- * TransactionClient allows you to view and monitor transactions on
- * Story Protocol.
+ * TransactionClient allows you to view and monitor transactions on Story Protocol.
  */
 export class TransactionReadOnlyClient {
   protected readonly httpClient: AxiosInstance;

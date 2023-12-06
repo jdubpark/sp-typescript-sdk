@@ -9,8 +9,9 @@ import {
 } from "../types/resources/relationshipType";
 import { dictToQueryParams } from "../utils/utils";
 import { handleError } from "../utils/errors";
+
 /**
- * Client for managing RelationshipTypes.
+ * RelationshipTypeReadOnlyClient allows you to view and search relationship types on Story Protocol.
  */
 export class RelationshipTypeReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
@@ -24,9 +25,8 @@ export class RelationshipTypeReadOnlyClient {
   /**
    * Get a RelationshipType by ipOrgId or relType.
    *
-   * @param ipOrgId - The ID of the IP Org.
-   * @param relType - Relationship Type.
-   * @returns A Promise that resolves to the GetRelationshipTypeResponse.
+   * @param request - the request object for getting the relationship type
+   * @returns the response object that contains the fetched relationship type object
    */
   public async get(request: GetRelationshipTypeRequest): Promise<GetRelationshipTypeResponse> {
     try {
@@ -44,7 +44,7 @@ export class RelationshipTypeReadOnlyClient {
   /**
    * List all RelationshipTypes.
    *
-   * @returns A Promise that resolves to the ListRelationshipTypesResponse.
+   * @returns the response object that contains a list of relationship types
    */
   public async list(request: ListRelationshipTypesRequest): Promise<ListRelationshipTypesResponse> {
     try {

@@ -10,8 +10,7 @@ import {
 } from "../types/resources/hook";
 
 /**
- * HookReadOnlyClient allows you to get and list hook data on
- * Story Protocol.
+ * HookReadOnlyClient allows you to get and search hooks on Story Protocol.
  */
 export class HookReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
