@@ -53,7 +53,7 @@ export class ModuleReadOnlyClient {
       });
       return response.data as ListModuleResponse;
     } catch (error: unknown) {
-      handleError(error, `Failed to get modules`);
+      handleError(error, `Failed to list modules`);
     }
   }
 }

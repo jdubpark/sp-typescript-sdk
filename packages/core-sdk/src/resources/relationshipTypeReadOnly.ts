@@ -37,12 +37,12 @@ export class RelationshipTypeReadOnlyClient {
 
       return response.data as GetRelationshipTypeResponse;
     } catch (error: unknown) {
-      handleError(error, `Failed to get RelationshipType`);
+      handleError(error, `Failed to get relationship type`);
     }
   }
 
   /**
-   * List all RelationshipTypes.
+   * List RelationshipTypes.
    *
    * @returns the response object that contains a list of relationship types
    */
@@ -61,7 +61,7 @@ export class RelationshipTypeReadOnlyClient {
 
       return response.data as ListRelationshipTypesResponse;
     } catch (error: unknown) {
-      handleError(error, `Failed to list RelationshipTypes`);
+      handleError(error, `Failed to list relationship types`);
     }
   }
 }

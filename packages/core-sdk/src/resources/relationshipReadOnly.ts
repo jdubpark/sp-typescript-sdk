@@ -47,7 +47,7 @@ export class RelationshipReadOnlyClient {
   }
 
   /**
-   * List all relationships.
+   * List relationships.
    *
    * @returns the response object that contains a list of relationships.
    */

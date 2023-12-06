@@ -61,7 +61,7 @@ export class RelationshipTypeClient extends RelationshipTypeReadOnlyClient {
         return { txHash: txHash };
       }
     } catch (error: unknown) {
-      handleError(error, "Failed to register relationship");
+      handleError(error, "Failed to register relationship type");
     }
   }
 }
