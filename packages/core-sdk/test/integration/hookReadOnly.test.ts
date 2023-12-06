@@ -1,5 +1,4 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import {
   StoryClient,
   StoryReadOnlyConfig,
@@ -7,10 +6,6 @@ import {
   ListHookRequest,
   ReadOnlyClient,
 } from "../../src";
-import * as dotenv from "dotenv";
-
-dotenv.config();
-chai.use(chaiAsPromised);
 
 describe("Hook client integration tests", () => {
   let client: ReadOnlyClient;

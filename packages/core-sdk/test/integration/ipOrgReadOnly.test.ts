@@ -1,10 +1,5 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryReadOnlyConfig, ReadOnlyClient, ListIPOrgRequest } from "../../src";
-import * as dotenv from "dotenv";
-
-dotenv.config();
-chai.use(chaiAsPromised);
 
 describe("IPOrg Read Only Functions", () => {
   let client: ReadOnlyClient;

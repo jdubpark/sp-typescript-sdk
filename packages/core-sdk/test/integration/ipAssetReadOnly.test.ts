@@ -1,11 +1,6 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryReadOnlyConfig, ListIpAssetRequest } from "../../src";
-import * as dotenv from "dotenv";
 import { ReadOnlyClient } from "../../src";
-
-dotenv.config();
-chai.use(chaiAsPromised);
 
 describe("IP Asset Read Only Functions", () => {
   let client: ReadOnlyClient;

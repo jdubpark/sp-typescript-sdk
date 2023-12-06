@@ -1,14 +1,8 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryConfig, Client } from "../../src";
-import * as dotenv from "dotenv";
 import { sepolia } from "viem/chains";
-import { Account, Hex, http } from "viem";
+import { Hex, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-
-dotenv.config();
-chai.use(chaiAsPromised);
-chai.config.truncateThreshold = 0;
 
 describe("IP Asset Functions", () => {
   let client: Client;

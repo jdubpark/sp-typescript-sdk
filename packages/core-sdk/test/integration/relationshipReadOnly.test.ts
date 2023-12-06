@@ -1,16 +1,9 @@
-import chai from "chai";
-import chaiAsPromised from "chai-as-promised";
 import {
   StoryClient,
   StoryReadOnlyConfig,
   ReadOnlyClient,
   ListRelationshipRequest,
 } from "../../src";
-import * as dotenv from "dotenv";
-
-dotenv.config();
-chai.should();
-chai.use(chaiAsPromised);
 
 describe("Relationship Read Only Functions", () => {
   let client: ReadOnlyClient;

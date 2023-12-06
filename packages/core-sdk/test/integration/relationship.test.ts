@@ -1,15 +1,9 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryConfig, Client } from "../../src";
-import * as dotenv from "dotenv";
 import { privateKeyToAccount } from "viem/accounts";
-import { getAddress, Hex, http } from "viem";
+import { Hex, http } from "viem";
 import { sepolia } from "viem/chains";
 import { RegisterRelationshipRequest } from "../../src/types/resources/relationship";
-
-dotenv.config();
-chai.use(chaiAsPromised);
-chai.config.truncateThreshold = 0;
 
 describe("Relationship Functions", () => {
   let client: Client;

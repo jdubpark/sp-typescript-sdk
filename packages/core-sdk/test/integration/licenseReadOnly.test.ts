@@ -1,11 +1,6 @@
-// import chai, { expect } from "chai";
-// import chaiAsPromised from "chai-as-promised";
+// import { expect } from "chai";
 // import { StoryClient, StoryReadOnlyConfig, Environment, ListLicenseRequest } from "../../src/index";
-// import * as dotenv from "dotenv";
 // import { ReadOnlyClient } from "../../src/types/client";
-
-// dotenv.config();
-// chai.use(chaiAsPromised);
 
 // describe("License Read Only Functions", () => {
 //   let client: ReadOnlyClient;

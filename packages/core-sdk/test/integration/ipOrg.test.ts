@@ -1,14 +1,8 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryConfig, Client } from "../../src";
-import * as dotenv from "dotenv";
 import { sepolia } from "viem/chains";
-import { getAddress, Hex, http } from "viem";
+import { Hex, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-
-dotenv.config();
-chai.use(chaiAsPromised);
-chai.config.truncateThreshold = 0;
 
 describe("IPOrg Functions", () => {
   let client: Client;
@@ -40,12 +34,10 @@ describe("IPOrg Functions", () => {
         }),
       ).to.not.be.rejected;
 
-      expect(response.txHash).to.be.a("string");
-      expect(response.txHash).not.empty;
+      expect(response.txHash).to.exist.and.be.a("string").and.not.be.empty;
 
       if (waitForTransaction) {
-        expect(response.ipOrgId).to.be.a("string");
-        expect(response.ipOrgId).not.empty;
+        expect(response.ipOrgId).to.exist.and.be.a("string").and.not.be.empty;
       }
     });
 
@@ -62,12 +54,10 @@ describe("IPOrg Functions", () => {
         }),
       ).to.not.be.rejected;
 
-      expect(response.txHash).to.be.a("string");
-      expect(response.txHash).not.empty;
+      expect(response.txHash).to.exist.and.be.a("string").and.not.be.empty;
 
       if (waitForTransaction) {
-        expect(response.ipOrgId).to.be.a("string");
-        expect(response.ipOrgId).not.empty;
+        expect(response.ipOrgId).to.exist.and.be.a("string").and.not.be.empty;
       }
     });
   });

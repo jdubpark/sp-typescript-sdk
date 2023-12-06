@@ -1,15 +1,8 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryConfig, Client } from "../../src";
-import * as dotenv from "dotenv";
 import { sepolia } from "viem/chains";
-import { getAddress, Hex, http, PrivateKeyAccount } from "viem";
+import { http, PrivateKeyAccount } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { WalletClient } from "viem";
-
-dotenv.config();
-chai.use(chaiAsPromised);
-chai.config.truncateThreshold = 0;
 
 describe.skip("License Functions", () => {
   let client: Client;
