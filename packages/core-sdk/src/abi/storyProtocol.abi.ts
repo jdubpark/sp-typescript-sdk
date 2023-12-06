@@ -12,7 +12,7 @@ if (typeof process !== "undefined") {
 export const storyProtocolAbi = storyProtocolJson;
 export const ErrorsAbi = errorsJson;
 
-const storyProtocolMerged = Object.assign({}, storyProtocolAbi, ErrorsAbi);
+const storyProtocolMerged = [...storyProtocolAbi, ...ErrorsAbi];
 
 export const storyProtocolReadable = formatAbi(storyProtocolMerged);
 
