@@ -32,6 +32,7 @@ export type {
 
 export type {
   IPAsset,
+  IPAssetType,
   GetIpAssetRequest,
   GetIpAssetResponse,
   CreateIpAssetRequest,
