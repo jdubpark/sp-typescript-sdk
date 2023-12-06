@@ -45,7 +45,7 @@ export class IPOrgClient extends IPOrgReadOnlyClient {
           ...ipOrgControllerConfig,
           eventName: "IPOrgRegistered",
         });
-        return { txHash: txHash, ipOrgId: String(targetLog?.args["ipAssetOrg"]) };
+        return { txHash: txHash, ipOrgId: targetLog?.args.ipAssetOrg };
       } else {
         return { txHash: txHash };
       }
