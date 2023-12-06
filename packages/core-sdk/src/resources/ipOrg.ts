@@ -9,8 +9,7 @@ import { ipOrgControllerConfig } from "../abi/ipOrgController.abi";
 import { waitTxAndFilterLog } from "../utils/utils";
 
 /**
- * IPOrgClient allows you to create, update, view, search IPOrgs on
- * Story Protocol.
+ * IPOrgClient allows you to create, view, search IPOrgs on Story Protocol.
  */
 export class IPOrgClient extends IPOrgReadOnlyClient {
   private readonly wallet: WalletClient;

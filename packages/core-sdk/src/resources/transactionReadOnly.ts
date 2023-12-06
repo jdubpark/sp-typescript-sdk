@@ -10,8 +10,7 @@ import {
 } from "../types/resources/transaction";
 
 /**
- * TransactionClient allows you to view and monitor transactions on
- * Story Protocol.
+ * TransactionClient allows you to view and monitor transactions on Story Protocol.
  */
 export class TransactionReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
@@ -38,10 +37,9 @@ export class TransactionReadOnlyClient {
   }
 
   /**
-   * Get transaction data based on the specified transaction id.
+   * List Transactions.
    *
-   * @param request - the request object for getting the transactions
-   * @returns the response object that contains the fetched transaction object
+   * @returns the response object that contains a list of transactions
    */
   public async list(request?: ListTransactionRequest): Promise<ListTransactionResponse> {
     try {
@@ -51,7 +49,7 @@ export class TransactionReadOnlyClient {
       const response = await this.httpClient.post(`/protocol/transaction`, request);
       return response.data as ListTransactionResponse;
     } catch (error: unknown) {
-      handleError(error, `Failed to get transactions`);
+      handleError(error, `Failed to list transactions`);
     }
   }
 }

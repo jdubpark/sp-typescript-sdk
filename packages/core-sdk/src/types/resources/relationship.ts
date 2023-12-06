@@ -13,6 +13,11 @@ export type Relationship = {
   txHash: string;
 };
 
+/**
+ * Request type for relationship.register method.
+ *
+ * @public
+ */
 export type RegisterRelationshipRequest = {
   ipOrgId: string;
   relType: string;
@@ -25,26 +30,52 @@ export type RegisterRelationshipRequest = {
   txOptions?: TxOptions;
 };
 
+/**
+ * Response type for relationship.register method.
+ *
+ * @public
+ */
 export type RegisterRelationshipResponse = {
   txHash: string;
   relationshipId?: string;
   success?: boolean;
 };
 
+/**
+ * Request type for relationship.get method.
+ *
+ * @public
+ */
 export type GetRelationshipRequest = {
   relationshipId: string;
   options?: QueryOptions;
 };
 
+/**
+ * Response type for relationship.get method.
+ *
+ * @public
+ */
 export type GetRelationshipResponse = {
   relationship: Relationship;
 };
 
+/**
+ * Request type for relationship.list method.
+ *
+ * @public
+ */
 export type ListRelationshipRequest = {
   tokenId: string;
   contract: string;
   options?: QueryOptions;
 };
+
+/**
+ * Response type for relationship.list method.
+ *
+ * @public
+ */
 export type ListRelationshipResponse = {
   relationships: Relationship[];
 };

@@ -10,8 +10,7 @@ import {
 } from "../types/resources/module";
 
 /**
- * ModuleClient allows you to view and monitor modules on
- * Story Protocol.
+ * ModuleReadOnlyClient allows you to view and search modules on Story Protocol.
  */
 export class ModuleReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
@@ -38,10 +37,9 @@ export class ModuleReadOnlyClient {
   }
 
   /**
-   * Get module data based on the specified module id.
+   * List Modules.
    *
-   * @param request - the request object for getting the modules
-   * @returns the response object that contains the fetched module object
+   * @returns the response object that contains a list of modules
    */
   public async list(request?: ListModuleRequest): Promise<ListModuleResponse> {
     try {
@@ -55,7 +53,7 @@ export class ModuleReadOnlyClient {
       });
       return response.data as ListModuleResponse;
     } catch (error: unknown) {
-      handleError(error, `Failed to get modules`);
+      handleError(error, `Failed to list modules`);
     }
   }
 }

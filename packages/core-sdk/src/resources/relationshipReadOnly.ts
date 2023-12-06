@@ -11,7 +11,7 @@ import { isIntegerString } from "../utils/utils";
 import { handleError } from "../utils/errors";
 
 /**
- * Client for managing relationships.
+ * RelationshipReadOnlyClient allows you to view and search relationships on Story Protocol.
  */
 export class RelationshipReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
@@ -25,8 +25,8 @@ export class RelationshipReadOnlyClient {
   /**
    * Get a relationship by its ID.
    *
-   * @param relationshipId - The ID of the relationship to retrieve.
-   * @returns A Promise that resolves to the RelationshipGetResponse.
+   * @param request - the request object for getting the relationship
+   * @returns the response object that contains the fetched relationship object
    */
   public async get(request: GetRelationshipRequest): Promise<GetRelationshipResponse> {
     try {
@@ -47,9 +47,9 @@ export class RelationshipReadOnlyClient {
   }
 
   /**
-   * List all relationships.
+   * List relationships.
    *
-   * @returns A Promise that resolves to the RelationshipListResponse.
+   * @returns the response object that contains a list of relationships.
    */
   public async list(request: ListRelationshipRequest): Promise<ListRelationshipResponse> {
     try {
