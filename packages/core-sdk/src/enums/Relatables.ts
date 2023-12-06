@@ -1,3 +1,6 @@
+/**
+ * @public
+ */
 export enum Relatables {
   Undefined = 0,
   IPA = 1,

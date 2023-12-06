@@ -10,7 +10,7 @@ import {
 } from "../types/resources/hook";
 
 /**
- * HookClient allows you to view and monitor hooks on
+ * HookReadOnlyClient allows you to get and list hook data on
  * Story Protocol.
  */
 export class HookReadOnlyClient {

@@ -25,7 +25,7 @@ export class RelationshipReadOnlyClient {
   /**
    * Get a relationship by its ID.
    *
-   * @param relationshipId - The ID of the relationship to retrieve.
+   * @param request - The request object for getting the relationship.
    * @returns A Promise that resolves to the RelationshipGetResponse.
    */
   public async get(request: GetRelationshipRequest): Promise<GetRelationshipResponse> {
