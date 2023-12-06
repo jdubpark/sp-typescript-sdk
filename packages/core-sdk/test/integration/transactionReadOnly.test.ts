@@ -5,6 +5,7 @@ import {
   StoryReadOnlyConfig,
   ReadOnlyClient,
   ListTransactionRequest,
+  ResourceType,
 } from "../../src";
 import * as dotenv from "dotenv";
 
@@ -40,14 +41,16 @@ describe("Transaction client integration tests", () => {
       expect(transaction).to.have.property("initiator");
       expect(transaction).to.have.property("resourceType");
       expect(transaction).to.have.property("resourceId");
-      expect(transaction).to.have.property("ipOrgId");
+      if (transaction.resourceType !== ResourceType.Relationship.valueOf()) {
+        expect(transaction).to.have.property("ipOrgId");
+        expect(transaction.ipOrgId).to.be.a("string");
+      }
       expect(transaction.id).to.be.a("string");
       expect(transaction.txHash).to.be.a("string");
       expect(transaction.createdAt).to.be.a("string");
       expect(transaction.initiator).to.be.a("string");
       expect(transaction.resourceType).to.be.a("string");
       expect(transaction.resourceId).to.be.a("string");
-      expect(transaction.ipOrgId).to.be.a("string");
 
       const transaction2 = response.transactions[1];
       expect(transaction2).to.have.property("id");
@@ -56,14 +59,16 @@ describe("Transaction client integration tests", () => {
       expect(transaction2).to.have.property("initiator");
       expect(transaction2).to.have.property("resourceType");
       expect(transaction2).to.have.property("resourceId");
-      expect(transaction2).to.have.property("ipOrgId");
+      if (transaction.resourceType !== ResourceType.Relationship.valueOf()) {
+        expect(transaction2).to.have.property("ipOrgId");
+        expect(transaction2.ipOrgId).to.be.a("string");
+      }
       expect(transaction2.id).to.be.a("string");
       expect(transaction2.txHash).to.be.a("string");
       expect(transaction2.createdAt).to.be.a("string");
       expect(transaction2.initiator).to.be.a("string");
       expect(transaction2.resourceType).to.be.a("string");
       expect(transaction2.resourceId).to.be.a("string");
-      expect(transaction2.ipOrgId).to.be.a("string");
     });
 
     it("should return a list of transactions successfully without options", async () => {
