@@ -9,7 +9,7 @@ import { registrationModuleConfig } from "../abi/registrationModule.abi";
 import { parseToBigInt, waitTxAndFilterLog, typedDataArrayToBytesArray } from "../utils/utils";
 
 /**
- * IpAssetClient allows you to create, view, and list IP Assets on Story Protocol.
+ * IpAssetClient allows you to create, view, and search IP Assets on Story Protocol.
  */
 export class IPAssetClient extends IPAssetReadOnlyClient {
   private readonly wallet: WalletClient;
@@ -35,7 +35,7 @@ export class IPAssetClient extends IPAssetReadOnlyClient {
           {
             owner: getAddress(request.owner || this.wallet.account!.address),
             name: request.name,
-            ipOrgAssetType: parseToBigInt(request.type),
+            ipOrgAssetType: parseToBigInt(request.typeIndex),
             hash: toHex(request.contentHash || "", { size: 32 }),
             mediaUrl: request.mediaUrl || "",
           },
@@ -51,7 +51,7 @@ export class IPAssetClient extends IPAssetReadOnlyClient {
           ...registrationModuleConfig,
           eventName: "IPAssetRegistered",
         });
-        return { txHash: txHash, ipAssetId: String(targetLog?.args["ipAssetId_"]) };
+        return { txHash: txHash, ipAssetId: targetLog?.args.ipAssetId_.toString() };
       } else {
         return { txHash: txHash };
       }

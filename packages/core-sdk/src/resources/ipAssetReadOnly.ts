@@ -11,7 +11,7 @@ import { handleError } from "../utils/errors";
 import { isIntegerString } from "../utils/utils";
 
 /**
- * IpAssetClient allows you to create, view, and list IP Assets on Story Protocol.
+ * IPAssetReadOnlyClient allows you to view and search IP Assets on Story Protocol.
  */
 export class IPAssetReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
@@ -42,7 +42,7 @@ export class IPAssetReadOnlyClient {
   }
 
   /**
-   * List all IP assets.
+   * List IP assets.
    *
    * @returns the response object that contains results from listing query.
    */

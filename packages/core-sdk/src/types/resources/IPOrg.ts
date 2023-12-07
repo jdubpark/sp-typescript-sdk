@@ -1,7 +1,7 @@
 import { QueryOptions, TxOptions } from "../options";
 
 /**
- * Core data model for franchise.
+ * Core data model for IP Org.
  *
  * @public
  */
@@ -12,13 +12,13 @@ export type IPOrg = {
   owner: string;
   baseUri?: string;
   contractUri?: string;
-  ipAssetTypes: string[];
+  ipAssetTypes: Array<string>;
   createdAt: string; // ISO 8601
   txHash: string;
 };
 
 /**
- * Request type for franchise.get method.
+ * Request type for iporg.get method.
  *
  * @public
  */
@@ -27,7 +27,7 @@ export type GetIPOrgRequest = {
 };
 
 /**
- * Response type for franchise.get method.
+ * Response type for iporg.get method.
  *
  * @public
  */
@@ -36,7 +36,7 @@ export type GetIPOrgResponse = {
 };
 
 /**
- * Request type for franchise.create method.
+ * Request type for iporg.create method.
  *
  * @public
  */
@@ -49,7 +49,7 @@ export type CreateIPOrgRequest = {
 };
 
 /**
- * Response type for franchise.create method.
+ * Response type for iporg.create method.
  *
  * @public
  */
@@ -59,7 +59,7 @@ export type CreateIPOrgResponse = {
 };
 
 /**
- * Request type for franchise.list method.
+ * Request type for iporg.list method.
  *
  * @public
  */
@@ -68,7 +68,7 @@ export type ListIPOrgRequest = {
 };
 
 /**
- * Response type for franchise.list method.
+ * Response type for iporg.list method.
  *
  * @public
  */

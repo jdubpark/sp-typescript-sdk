@@ -9,8 +9,7 @@ import { ipOrgControllerConfig } from "../abi/ipOrgController.abi";
 import { waitTxAndFilterLog } from "../utils/utils";
 
 /**
- * IPOrgClient allows you to create, update, view, search IPOrgs on
- * Story Protocol.
+ * IPOrgClient allows you to create, view, search IPOrgs on Story Protocol.
  */
 export class IPOrgClient extends IPOrgReadOnlyClient {
   private readonly wallet: WalletClient;
@@ -46,7 +45,7 @@ export class IPOrgClient extends IPOrgReadOnlyClient {
           ...ipOrgControllerConfig,
           eventName: "IPOrgRegistered",
         });
-        return { txHash: txHash, ipOrgId: String(targetLog?.args["ipAssetOrg"]) };
+        return { txHash: txHash, ipOrgId: targetLog?.args.ipAssetOrg };
       } else {
         return { txHash: txHash };
       }

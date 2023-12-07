@@ -10,8 +10,7 @@ import {
 import { handleError } from "../utils/errors";
 
 /**
- * IPOrgReadOnlyClient allows you to view, search IPOrgs on
- * Story Protocol.
+ * IPOrgReadOnlyClient allows you to view and search IPOrgs on Story Protocol.
  */
 export class IPOrgReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
@@ -41,7 +40,7 @@ export class IPOrgReadOnlyClient {
     }
   }
   /**
-   * List all IPOrgs.
+   * List IPOrgs.
    *
    * @returns the response object that contains a list of IPOrgs
    */

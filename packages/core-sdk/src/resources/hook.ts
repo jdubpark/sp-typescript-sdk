@@ -4,8 +4,7 @@ import { PublicClient, WalletClient } from "viem";
 import { HookReadOnlyClient } from "./hookReadOnly";
 
 /**
- * HookClient allows you to view and monitor hooks on
- * Story Protocol.
+ * HookClient allows you to view and search hooks on Story Protocol.
  */
 export class HookClient extends HookReadOnlyClient {
   private readonly wallet: WalletClient;

@@ -12,7 +12,7 @@ import { relationshipModuleConfig } from "../abi/relationshipModule.abi";
 import { waitTxAndFilterLog } from "../utils/utils";
 
 /**
- * Client for managing relationships.
+ * RelationshipTypeClient allows you to create, view and search relationship types on Story Protocol.
  */
 export class RelationshipTypeClient extends RelationshipTypeReadOnlyClient {
   private readonly wallet: WalletClient;
@@ -42,8 +42,8 @@ export class RelationshipTypeClient extends RelationshipTypeReadOnlyClient {
               src: request.relatedElements.src,
               dst: request.relatedElements.dst,
             },
-            allowedSrcs: request.allowedSrcs,
-            allowedDsts: request.allowedDsts,
+            allowedSrcs: request.allowedSrcIpAssetTypes,
+            allowedDsts: request.allowedDstIpAssetTypes,
           },
         ],
         account: this.wallet.account,
@@ -61,7 +61,7 @@ export class RelationshipTypeClient extends RelationshipTypeReadOnlyClient {
         return { txHash: txHash };
       }
     } catch (error: unknown) {
-      handleError(error, "Failed to register relationship");
+      handleError(error, "Failed to register relationship type");
     }
   }
 }

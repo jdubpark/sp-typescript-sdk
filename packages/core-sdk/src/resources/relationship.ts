@@ -12,7 +12,7 @@ import { relationshipModuleConfig } from "../abi/relationshipModule.abi";
 import { waitTxAndFilterLog, typedDataArrayToBytesArray } from "../utils/utils";
 
 /**
- * Client for managing relationships.
+ * RelationshipClient allows you to create, view and search relationships on Story Protocol.
  */
 export class RelationshipClient extends RelationshipReadOnlyClient {
   private readonly wallet: WalletClient;
@@ -57,7 +57,7 @@ export class RelationshipClient extends RelationshipReadOnlyClient {
           eventName: "RelationshipCreated",
         });
         // https://sepolia.etherscan.io/tx/0x99d5736c65bd81cd4a361a731d4a035375a0926c95e4132e8fcb80ad5b602b5c#eventlog
-        return { txHash: txHash, relationshipId: targetLog?.args["relationshipId"] };
+        return { txHash: txHash, relationshipId: targetLog?.args.relationshipId.toString() };
       } else {
         return { txHash: txHash };
       }

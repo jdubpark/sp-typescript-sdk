@@ -1,5 +1,5 @@
 import { QueryOptions, TxOptions } from "../options";
-import { TypedData } from "../typedData";
+import { TypedData } from "../common";
 
 /**
  * Core data model for IP Asset.
@@ -9,13 +9,18 @@ import { TypedData } from "../typedData";
 export type IPAsset = {
   id: string;
   name: string;
-  type: number;
+  type: IPAssetType;
   ipOrgId: string;
   owner: string;
   mediaUrl: string;
   contentHash?: string;
   createdAt: string; // ISO 8601
   txHash: string;
+};
+
+export type IPAssetType = {
+  index: number;
+  value: string;
 };
 
 /**
@@ -43,7 +48,7 @@ export type GetIpAssetResponse = {
  */
 export type CreateIpAssetRequest = {
   name: string;
-  type: number;
+  typeIndex: number;
   ipOrgId: string;
   owner?: string;
   mediaUrl?: string;

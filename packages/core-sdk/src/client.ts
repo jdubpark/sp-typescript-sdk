@@ -101,78 +101,6 @@ export class StoryClient {
     return new StoryClient(config, false) as Client;
   }
 
-  private initIPOrg(): void {
-    if (this.isReadOnly) {
-      this._ipOrg = new IPOrgReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._ipOrg = new IPOrgClient(this.httpClient, this.rpcClient, this.wallet!);
-    }
-  }
-
-  private initRelationship(): void {
-    if (this.isReadOnly) {
-      this._relationship = new RelationshipReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._relationship = new RelationshipClient(this.httpClient, this.rpcClient, this.wallet!);
-    }
-  }
-
-  private initRelationshipType(): void {
-    if (this.isReadOnly) {
-      this._relationshipType = new RelationshipTypeReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._relationshipType = new RelationshipTypeClient(
-        this.httpClient,
-        this.rpcClient,
-        this.wallet!,
-      );
-    }
-  }
-
-  private initIpAsset(): void {
-    if (this.isReadOnly) {
-      this._ipAsset = new IPAssetReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._ipAsset = new IPAssetClient(this.httpClient, this.rpcClient, this.wallet!);
-    }
-  }
-
-  private initLicense(): void {
-    if (this.isReadOnly) {
-      this._license = new LicenseReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._license = new LicenseClient(this.httpClient, this.rpcClient, this.wallet!);
-    }
-  }
-
-  private initTransaction(): void {
-    if (this.isReadOnly) {
-      this._transaction = new TransactionReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._transaction = new TransactionClient(this.httpClient, this.rpcClient, this.wallet!);
-    }
-  }
-
-  private initModule(): void {
-    if (this.isReadOnly) {
-      this._module = new ModuleReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._module = new ModuleClient(this.httpClient, this.rpcClient, this.wallet!);
-    }
-  }
-
-  private initHook(): void {
-    if (this.isReadOnly) {
-      this._hook = new HookReadOnlyClient(this.httpClient, this.rpcClient);
-    } else {
-      this._hook = new HookClient(this.httpClient, this.rpcClient, this.wallet!);
-    }
-  }
-
-  private initPlatform(): void {
-    this._platform = new PlatformClient(this.httpClient);
-  }
-
   /**
    * Getter for the ipOrg client. The client is lazily created when
    * this method is called.
@@ -181,114 +109,136 @@ export class StoryClient {
    */
   public get ipOrg(): IPOrgClient | IPOrgReadOnlyClient {
     if (this._ipOrg === null) {
-      this.initIPOrg();
+      this._ipOrg = this.isReadOnly
+        ? new IPOrgReadOnlyClient(this.httpClient, this.rpcClient)
+        : new IPOrgClient(this.httpClient, this.rpcClient, this.wallet!);
     }
 
-    return this._ipOrg as IPOrgClient | IPOrgReadOnlyClient;
+    return this._ipOrg;
   }
 
   /**
    * Getter for the relationship client. The client is lazily created when
    * this method is called.
    *
-   * @returns the RelationshipClient instance
+   * @returns the RelationshipReadOnlyClient or RelationshipClient instance
    */
   public get relationship(): RelationshipClient | RelationshipReadOnlyClient {
     if (this._relationship === null) {
-      this.initRelationship();
+      this._relationship = this.isReadOnly
+        ? new RelationshipReadOnlyClient(this.httpClient, this.rpcClient)
+        : new RelationshipClient(this.httpClient, this.rpcClient, this.wallet!);
     }
 
-    return this._relationship as RelationshipReadOnlyClient;
+    return this._relationship;
   }
 
   /**
    * Getter for the relationship type client. The client is lazily created when
    * this method is called.
    *
-   * @returns the RelationshipTypeClient instance
+   * @returns the RelationshipTypeReadOnlyClient or RelationshipTypeClient instance
    */
   public get relationshipType(): RelationshipTypeClient | RelationshipTypeReadOnlyClient {
     if (this._relationshipType === null) {
-      this.initRelationshipType();
+      this._relationshipType = this.isReadOnly
+        ? new RelationshipTypeReadOnlyClient(this.httpClient, this.rpcClient)
+        : new RelationshipTypeClient(this.httpClient, this.rpcClient, this.wallet!);
     }
 
-    return this._relationshipType as RelationshipTypeReadOnlyClient;
+    return this._relationshipType;
   }
 
   /**
    * Getter for the IP Asset client. The client is lazily created when
    * this method is called.
    *
-   * @returns the IpAssetClient instance
+   * @returns the IPAssetReadOnlyClient or IpAssetClient instance
    */
   public get ipAsset(): IPAssetClient | IPAssetReadOnlyClient {
     if (this._ipAsset === null) {
-      this.initIpAsset();
+      this._ipAsset = this.isReadOnly
+        ? new IPAssetReadOnlyClient(this.httpClient, this.rpcClient)
+        : new IPAssetClient(this.httpClient, this.rpcClient, this.wallet!);
     }
-    return this._ipAsset as IPAssetClient | IPAssetReadOnlyClient;
+    return this._ipAsset;
   }
 
   /**
    * Getter for the license client. The client is lazily created when
    * this method is called.
    *
-   * @returns the License instance
+   * @returns the LicenseReadOnlyClient or LicenseClient instance
    */
   public get license(): LicenseClient | LicenseReadOnlyClient {
     if (this._license === null) {
-      this.initLicense();
+      this._license = this.isReadOnly
+        ? new LicenseReadOnlyClient(this.httpClient, this.rpcClient)
+        : new LicenseClient(this.httpClient, this.rpcClient, this.wallet!);
     }
 
-    return this._license as LicenseClient | LicenseReadOnlyClient;
+    return this._license;
   }
 
   /**
    * Getter for the transaction client. The client is lazily created when
    * this method is called.
    *
-   * @returns the TransactionClient instance
+   * @returns the TransactionReadOnlyClient or TransactionClient instance
    */
   public get transaction(): TransactionClient | TransactionReadOnlyClient {
     if (this._transaction === null) {
-      this.initTransaction();
+      this._transaction = this.isReadOnly
+        ? new TransactionReadOnlyClient(this.httpClient, this.rpcClient)
+        : new TransactionClient(this.httpClient, this.rpcClient, this.wallet!);
     }
 
-    return this._transaction as TransactionClient | TransactionReadOnlyClient;
+    return this._transaction;
   }
 
   /**
    * Getter for the module client. The client is lazily created when
    * this method is called.
    *
-   * @returns the ModuleClient instance
+   * @returns the ModuleReadOnlyClient or ModuleClient instance
    */
   public get module(): ModuleClient | ModuleReadOnlyClient {
     if (this._module === null) {
-      this.initModule();
+      this._module = this.isReadOnly
+        ? new ModuleReadOnlyClient(this.httpClient, this.rpcClient)
+        : new ModuleClient(this.httpClient, this.rpcClient, this.wallet!);
     }
 
-    return this._module as ModuleClient | ModuleReadOnlyClient;
+    return this._module;
   }
 
   /**
    * Getter for the hook client. The client is lazily created when
    * this method is called.
    *
-   * @returns the HookClient instance
+   * @returns the HookReadOnlyClient or HookClient instance
    */
   public get hook(): HookClient | HookReadOnlyClient {
     if (this._hook === null) {
-      this.initHook();
+      this._hook = this.isReadOnly
+        ? new HookReadOnlyClient(this.httpClient, this.rpcClient)
+        : new HookClient(this.httpClient, this.rpcClient, this.wallet!);
     }
 
-    return this._hook as HookClient | HookReadOnlyClient;
+    return this._hook;
   }
 
+  /**
+   * Getter for the platform client. The client is lazily created when
+   * this method is called.
+   *
+   * @returns the PlatformClient instance
+   */
   public get platform(): PlatformClient {
     if (this._platform === null) {
-      this.initPlatform();
+      this._platform = new PlatformClient(this.httpClient);
     }
 
-    return this._platform as PlatformClient;
+    return this._platform;
   }
 }
