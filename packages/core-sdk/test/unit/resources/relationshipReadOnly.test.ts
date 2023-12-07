@@ -60,9 +60,7 @@ describe("Test RelationshipReadOnlyClient", function () {
       };
 
       axiosMock.get = sinon.stub().resolves(mockResponse);
-
       const response = await relationshipClient.get(mockGetRequest);
-
       expect(response).to.deep.equal(mockResponse.data);
     });
 
@@ -115,9 +113,7 @@ describe("Test RelationshipReadOnlyClient", function () {
       };
 
       axiosMock.post = sinon.stub().resolves(mockResponse);
-
       const response = await relationshipClient.list(mockListRequest);
-
       expect(response).to.deep.equal(mockResponse.data);
     });
 

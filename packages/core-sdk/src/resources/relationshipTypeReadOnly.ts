@@ -1,5 +1,5 @@
 import { AxiosInstance, AxiosResponse } from "axios";
-import { PublicClient } from "viem";
+import { isAddress, PublicClient } from "viem";
 
 import {
   GetRelationshipTypeRequest,
@@ -29,6 +29,13 @@ export class RelationshipTypeReadOnlyClient {
    * @returns the response object that contains the fetched relationship type object
    */
   public async get(request: GetRelationshipTypeRequest): Promise<GetRelationshipTypeResponse> {
+    if (!isAddress(request.ipOrgId)) {
+      return handleError(
+        new Error(`Invalid ipOrgId. Must be an address. But got: ${request.ipOrgId}`),
+        `Failed to get relationship type`,
+      );
+    }
+
     try {
       const params = dictToQueryParams(request);
       const response: AxiosResponse = await this.httpClient.get(
