@@ -1,15 +1,8 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryConfig, Client } from "../../src";
-import * as dotenv from "dotenv";
 import { sepolia } from "viem/chains";
-import { getAddress, Hex, http, PrivateKeyAccount } from "viem";
+import { http, PrivateKeyAccount } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { WalletClient } from "viem";
-
-dotenv.config();
-chai.use(chaiAsPromised);
-chai.config.truncateThreshold = 0;
 
 describe.skip("License Functions", () => {
   let client: Client;
@@ -33,7 +26,7 @@ describe.skip("License Functions", () => {
     it("should be able to register a license NFT (don't wait for txn)", async () => {
       const waitForTransaction: boolean = false;
       const createLicenseNftRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+        ipOrgId: process.env.TEST_IPORG_ID as string,
         isCommercial: false,
         licensee: wallet.address,
         preHooksCalldata: [],
@@ -53,7 +46,7 @@ describe.skip("License Functions", () => {
     it("should be able to register a license NFT (wait for txn)", async () => {
       const waitForTransaction: boolean = true;
       const createLicenseNftRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+        ipOrgId: process.env.TEST_IPORG_ID as string,
         isCommercial: false,
         licensee: wallet.address,
         preHooksCalldata: [],
@@ -75,7 +68,7 @@ describe.skip("License Functions", () => {
     it("should be able to register an IPA-bound license (don't wait for txn)", async () => {
       const waitForTransaction: boolean = false;
       const createIpaBoundLicenseRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+        ipOrgId: process.env.TEST_IPORG_ID as string,
         isCommercial: false,
         ipaId: 1,
         preHooksCalldata: [],
@@ -95,7 +88,7 @@ describe.skip("License Functions", () => {
     it("should be able to register an IPA-bound license (wait for txn)", async () => {
       const waitForTransaction: boolean = true;
       const createIpaBoundLicenseRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+        ipOrgId: process.env.TEST_IPORG_ID as string,
         isCommercial: false,
         ipaId: 1,
         preHooksCalldata: [],

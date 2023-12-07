@@ -49,7 +49,6 @@ describe("Test RelationshipReadOnlyClient", function () {
           relationship: {
             id: "rel-1234",
             type: "APPEARS_IN",
-            typeId: "type-5678",
             srcContract: "0xSourceContractAddress",
             srcTokenId: "srcToken123",
             dstContract: "0xDestContractAddress",
@@ -103,7 +102,6 @@ describe("Test RelationshipReadOnlyClient", function () {
             {
               id: "rel-1234",
               type: "APPEARS_IN",
-              typeId: "type-5678",
               srcContract: "0xSourceContractAddress",
               srcTokenId: "srcToken123",
               dstContract: "0xDestContractAddress",

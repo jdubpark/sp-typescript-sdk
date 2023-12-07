@@ -12,7 +12,7 @@ export const relationshipModuleAbi = [
         type: "uint256",
       },
       {
-        indexed: true,
+        indexed: false,
         internalType: "string",
         name: "relType",
         type: "string",
@@ -49,7 +49,7 @@ export const relationshipModuleAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: "string",
         name: "relType",
         type: "string",
