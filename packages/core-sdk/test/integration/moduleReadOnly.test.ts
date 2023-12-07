@@ -77,7 +77,7 @@ describe("Module client integration tests", () => {
   describe("Get Module", async function () {
     it("should return a module based on the module id", async () => {
       const req = {
-        moduleId: "0xd692de739fe1c1aaa31c3d0847dc17976afc05ff",
+        moduleId: process.env.TEST_MODULE_ID as string,
       } as GetModuleRequest;
 
       const response = await client.module.get(req);

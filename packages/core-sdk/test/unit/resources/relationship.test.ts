@@ -35,7 +35,7 @@ describe("Test RelationshipClient", function () {
 
       await expect(
         relationshipClient.register({
-          ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+          ipOrgId: process.env.TEST_IPORG_ID as string,
           relType: "appears_in",
           srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
           srcTokenId: "4",
@@ -72,9 +72,8 @@ describe("Test RelationshipClient", function () {
             topics: [
               "0xc1ab5d0231434d664068cd9e5f80a04152484f1844e564dd9fee5c687caa0d7c",
               "0x0000000000000000000000000000000000000000000000000000000000000001",
-              "0xfc7f0454ed02c478c10dae3ce113c900c4f9d3b10762ac2d41405fa8fc48713b",
             ],
-            data: "0x000000000000000000000000177175a4b26f6ea050676f8c9a14d395f896492c0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000177175a4b26f6ea050676f8c9a14d395f896492c0000000000000000000000000000000000000000000000000000000000000005",
+            data: "0x00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000ad2377c8f9f0ca6382fef166b08aede8318fe49c0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ad2377c8f9f0ca6382fef166b08aede8318fe49c0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000a617070656172735f696e00000000000000000000000000000000000000000000",
             blockNumber: 4727501,
             transactionHash: "0x99d5736c65bd81cd4a361a731d4a035375a0926c95e4132e8fcb80ad5b602b5c",
             transactionIndex: 105,
@@ -87,7 +86,7 @@ describe("Test RelationshipClient", function () {
 
       await expect(
         relationshipClient.register({
-          ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+          ipOrgId: process.env.TEST_IPORG_ID as string,
           relType: "appears_in",
           srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
           srcTokenId: "4",
@@ -104,7 +103,7 @@ describe("Test RelationshipClient", function () {
       rpcMock.simulateContract = sinon.stub().rejects(new Error("revert"));
       await expect(
         relationshipClient.register({
-          ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+          ipOrgId: process.env.TEST_IPORG_ID as string,
           relType: "appears_in",
           srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
           srcTokenId: "4",
@@ -146,7 +145,7 @@ describe("Test RelationshipClient", function () {
 
       try {
         await relationshipClient.register({
-          ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+          ipOrgId: process.env.TEST_IPORG_ID as string,
           relType: "appears_in",
           srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
           srcTokenId: "4",

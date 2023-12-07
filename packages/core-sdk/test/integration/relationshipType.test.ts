@@ -1,5 +1,11 @@
 import { expect } from "chai";
-import { StoryClient, StoryConfig, Client, RegisterRelationshipTypeRequest } from "../../src";
+import {
+  StoryClient,
+  StoryConfig,
+  Client,
+  RegisterRelationshipTypeRequest,
+  Relatables,
+} from "../../src";
 import { privateKeyToAccount } from "viem/accounts";
 import { Hex, http } from "viem";
 import { sepolia } from "viem/chains";
@@ -21,11 +27,11 @@ describe("Relationship Type Functions", function () {
     it("should create a relationship type and return txHash", async function () {
       const waitForTransaction: boolean = true;
       const mockRegisterTypeRequest: RegisterRelationshipTypeRequest = {
-        ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
-        relType: "appears_in",
+        ipOrgId: process.env.TEST_IPORG_ID as string,
+        relType: process.env.TEST_RELATIONSHIP_TYPE as string,
         relatedElements: {
-          src: 1,
-          dst: 1,
+          src: Relatables.IPA,
+          dst: Relatables.IPA,
         },
         allowedSrcIpAssetTypes: [1],
         allowedDstIpAssetTypes: [1],

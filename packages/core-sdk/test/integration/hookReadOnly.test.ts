@@ -79,7 +79,7 @@ describe("Hook client integration tests", () => {
   describe("Get Hook", async function () {
     it("should return array of all hooks", async () => {
       const req = {
-        hookId: "0xa26ba8224fb6173063f63388685f80708a6f4d96",
+        hookId: process.env.TEST_HOOK_ID as string,
       } as GetHookRequest;
 
       const response = await client.hook.get(req);

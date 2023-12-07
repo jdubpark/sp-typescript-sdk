@@ -32,7 +32,7 @@ describe("Test LicenseReadOnlyClient", function () {
             status: 3,
             licensor: "0xf398c12a45bc409b6c652e25bb0a3e702492a4ab",
             revoker: "0xf398c12a45bc409b6c652e25bb0a3e702492a4ab",
-            ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+            ipOrgId: process.env.TEST_IPORG_ID as string,
             licenseeType: 1,
             ipAssetId: "1",
             parentLicenseId: "0",
@@ -94,7 +94,7 @@ describe("Test LicenseReadOnlyClient", function () {
 
   describe("Test license.list", function () {
     const mockListLicenseRequest: ListLicenseRequest = {
-      ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+      ipOrgId: process.env.TEST_IPORG_ID as string,
       ipAssetId: "5",
     };
     const mockResponse = sinon.stub().returns({
@@ -105,7 +105,7 @@ describe("Test LicenseReadOnlyClient", function () {
             status: 3,
             licensor: "0xf398c12a45bc409b6c652e25bb0a3e702492a4ab",
             revoker: "0xf398c12a45bc409b6c652e25bb0a3e702492a4ab",
-            ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+            ipOrgId: process.env.TEST_IPORG_ID as string,
             licenseeType: 1,
             ipAssetId: "1",
             parentLicenseId: "0",
@@ -127,7 +127,7 @@ describe("Test LicenseReadOnlyClient", function () {
             status: 3,
             licensor: "0xf398c12a45bc409b6c652e25bb0a3e702492a4ab",
             revoker: "0xf398c12a45bc409b6c652e25bb0a3e702492a4ab",
-            ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+            ipOrgId: process.env.TEST_IPORG_ID as string,
             licenseeType: 2,
             ipAssetId: "0",
             parentLicenseId: "0",

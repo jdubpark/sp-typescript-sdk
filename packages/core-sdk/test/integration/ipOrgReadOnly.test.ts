@@ -7,7 +7,7 @@ import {
   IPOrg,
 } from "../../src";
 
-describe.only("IPOrg Read Only Functions", function () {
+describe("IPOrg Read Only Functions", function () {
   let client: ReadOnlyClient;
 
   before(function () {
@@ -18,7 +18,7 @@ describe.only("IPOrg Read Only Functions", function () {
   describe("Get IPOrg", async function () {
     it("should return ipOrg when the ipOrg id is valid", async function () {
       const response = await client.ipOrg.get({
-        ipOrgId: "0x0dad65978b6c637598674ea03b1c6f3333d00f5b",
+        ipOrgId: process.env.TEST_IPORG_ID as string,
       });
 
       expect(response).to.have.property("ipOrg");

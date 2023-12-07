@@ -19,8 +19,8 @@ describe("Relationship Type Read Only Functions", function () {
     it("should retrieve a relationship type by both ipOrgId and relType", async function () {
       const response = await expect(
         client.relationshipType.get({
-          ipOrgId: "0x1ebb43775fcc45cf05eaa96182c8762220e17941",
-          relType: "0xc12a5f0d1e5a95f4fc32ff629c53defa11273a372e29ae51ab24323e4af84fc3",
+          ipOrgId: process.env.TEST_IPORG_ID as string,
+          relType: process.env.TEST_RELATIONSHIP_TYPE as string,
         }),
       ).to.not.be.rejected;
 
@@ -32,7 +32,7 @@ describe("Relationship Type Read Only Functions", function () {
       return expect(
         client.relationshipType.get({
           ipOrgId: "0xde493e03d2de1cd7820b4f580beced57296b0009",
-          relType: "0xc12a5f0d1e5a95f4fc32ff629c53defa11273a372e29ae51ab24323e4af84fc3",
+          relType: process.env.TEST_RELATIONSHIP_TYPE as string,
         }),
       ).to.be.rejected;
     });
@@ -40,7 +40,7 @@ describe("Relationship Type Read Only Functions", function () {
 
   describe("List Relationship Types", async function () {
     const mockListRelationshipTypeRequest: ListRelationshipTypesRequest = {
-      ipOrgId: "0xb422e54932c1dae83e78267a4dd2805aa64a8061",
+      ipOrgId: process.env.TEST_IPORG_ID as string,
       options: {
         pagination: {
           limit: 10,

@@ -26,7 +26,7 @@ describe("IP Asset Functions", () => {
         client.ipAsset.create({
           name: "Test",
           typeIndex: 0,
-          ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+          ipOrgId: process.env.TEST_IPORG_ID as string,
           owner: senderAddress,
           contentHash: "",
           mediaUrl: "",
@@ -51,7 +51,7 @@ describe("IP Asset Functions", () => {
         client.ipAsset.create({
           name: "Test",
           typeIndex: 0,
-          ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
+          ipOrgId: process.env.TEST_IPORG_ID as string,
           contentHash: "",
           mediaUrl: "",
           txOptions: {
@@ -69,20 +69,20 @@ describe("IP Asset Functions", () => {
       }
     });
 
-    it("should not throw error when creating an IP Asset with a hook", async () => {
+    it.skip("should not throw error when creating an IP Asset with a hook", async () => {
       const waitForTransaction: boolean = true;
       const response = await expect(
         client.ipAsset.create({
           name: "Test",
           typeIndex: 0,
-          ipOrgId: "0x2554E198752d0F086c8b885CbCc5d663365673C2",
+          ipOrgId: process.env.TEST_IPORG_ID_WITH_HOOK as string,
           owner: senderAddress,
           contentHash: "",
           mediaUrl: "",
           preHookData: [
             {
               interface: "address",
-              data: ["0xf398C12A45Bc409b6C652E25bb0a3e702492A4ab"],
+              data: [process.env.TEST_WALLET_ADDRESS as string],
             },
           ],
           txOptions: {

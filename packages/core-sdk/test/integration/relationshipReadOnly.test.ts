@@ -19,7 +19,7 @@ describe("Relationship Read Only Functions", function () {
     it("should retrieve a relationship by its ID", async function () {
       const response = await expect(
         client.relationship.get({
-          relationshipId: "1", // Provide a valid ID
+          relationshipId: process.env.TEST_RELATIONSHIP_ID as string, // Provide a valid ID
         }),
       ).to.not.be.rejected;
       expect(response).to.have.property("relationship");
@@ -38,8 +38,8 @@ describe("Relationship Read Only Functions", function () {
   describe("List Relationships", async function () {
     it("should list all relationships", async function () {
       const mockListRelationshipRequest: ListRelationshipRequest = {
-        tokenId: "2",
-        contract: "0x309c205347e3826472643f9b7ebd8a50d64ccd9e",
+        tokenId: process.env.TEST_IPASSET_ID2 as string,
+        contract: process.env.NEXT_PUBLIC_IP_ASSET_REGISTRY_CONTRACT as string,
         options: {
           pagination: {
             limit: 1,
@@ -58,7 +58,7 @@ describe("Relationship Read Only Functions", function () {
     it("should handle errors when listing licenses with invalid id", async function () {
       const mockInvalidListRelationshipRequest: ListRelationshipRequest = {
         tokenId: "aaa",
-        contract: "0x309c205347e3826472643f9b7ebd8a50d64ccd9e",
+        contract: process.env.NEXT_PUBLIC_IP_ASSET_REGISTRY_CONTRACT as string,
         options: {
           pagination: {
             limit: 1,
