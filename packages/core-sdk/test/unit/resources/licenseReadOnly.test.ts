@@ -55,7 +55,7 @@ describe("Test LicenseReadOnlyClient", function () {
       const response = await licenseClient.get({
         licenseId: "49",
       });
-
+      console.log("Get license response", response);
       expect(response.license).to.be.an("object");
       expect(response.license.id).to.be.a("string");
       expect(response.license.status).to.be.a("number");

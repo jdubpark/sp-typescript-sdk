@@ -1,3 +1,4 @@
+import { TypedData } from "../common";
 import { QueryOptions, TxOptions } from "../options";
 
 /**
@@ -21,15 +22,51 @@ export type License = {
   txHash: string;
 };
 
-interface CreateLicenseRequest {
+export type ParamValue = {
+  tag: string | Uint8Array;
+  tagValue: TypedData;
+  // tagValue: any;
+};
+// default empty array, 0, 0
+export type LicenseCreation = {
+  params: ParamValue[]; // ParamValue[]
+  parentLicenseId: string;
+  ipaId: string; // address
+};
+
+export type CreateLicenseRequest = {
   ipOrgId: string;
-  parentLicenseId?: string;
-  isCommercial: boolean;
-  preHooksCalldata?: Record<string, undefined>[];
-  postHooksCalldata?: Record<string, undefined>[];
+  params: LicenseCreation;
+  // preHooksCalldata?: Record<string, undefined>[];
+  // postHooksCalldata?: Record<string, undefined>[];
+  preHookData?: Array<TypedData>;
+  postHookData?: Array<TypedData>;
   txOptions?: TxOptions;
+};
+
+export enum ParameterType {
+  Bool,
+  Number,
+  Address,
+  String,
+  MultipleChoice, // ShortString set
 }
 
+export type ParamDefinition = {
+  tag: string;
+  paramType: ParameterType;
+};
+
+export type Framework = {
+  id: string;
+  textUrl: string;
+  paramDefs: ParamDefinition[];
+};
+
+export type AddFrameworkRequest = {
+  framework: Framework;
+  txOptions?: TxOptions;
+};
 /**
  * Represents the request structure for creating a new license NFT (createLicenseNft on StoryProtocol.sol)
  *
@@ -89,4 +126,36 @@ export type ListLicenseResponse = {
 export type CreateLicenseResponse = {
   txHash: string; // Transaction hash of the license creation transaction.
   licenseId?: string;
+};
+
+export type ConfigureLicenseCalldata = {
+  ipOrgId: string;
+  config: LicensingConfig;
+};
+
+export enum LicensorConfig {
+  Unset,
+  IpOrgOwnerAlways,
+  ParentOrIpaOrIpOrgOwners,
+}
+export type LicensingConfig = {
+  frameworkId: string;
+  params: ParamValue[];
+  licensor: LicensorConfig;
+};
+
+/**
+ * Represents the response structure for configuring a license using the `license.configure` method.
+ *
+ * @public
+ */
+export type ConfigureLicenseRequest = {
+  ipOrg: string;
+  config: LicensingConfig;
+  txOptions?: TxOptions;
+};
+
+export type ConfigureLicenseResponse = {
+  txHash: string;
+  ipOrgTerms?: object;
 };

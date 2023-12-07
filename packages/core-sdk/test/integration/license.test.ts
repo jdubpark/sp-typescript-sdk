@@ -3,15 +3,21 @@ import chaiAsPromised from "chai-as-promised";
 import { StoryClient, StoryConfig, Client } from "../../src";
 import * as dotenv from "dotenv";
 import { sepolia } from "viem/chains";
-import { getAddress, Hex, http, PrivateKeyAccount } from "viem";
+import { http, parseGwei, PrivateKeyAccount } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { WalletClient } from "viem";
+
+import {
+  ConfigureLicenseRequest,
+  CreateLicenseRequest,
+  LicenseCreation,
+  LicensingConfig,
+} from "../../src/types/resources/license";
 
 dotenv.config();
 chai.use(chaiAsPromised);
 chai.config.truncateThreshold = 0;
 
-describe.skip("License Functions", () => {
+describe("License Functions", () => {
   let client: Client;
   let senderAddress: string;
   let wallet: PrivateKeyAccount;
@@ -29,90 +35,88 @@ describe.skip("License Functions", () => {
     client = StoryClient.newClient(config);
   });
 
-  describe("Non-commercial license registration", async function () {
-    it("should be able to register a license NFT (don't wait for txn)", async () => {
-      const waitForTransaction: boolean = false;
-      const createLicenseNftRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
-        isCommercial: false,
-        licensee: wallet.address,
-        preHooksCalldata: [],
-        postHooksCalldata: [],
+  describe("License creation", async function () {
+    it.only("should be able to create an NFT with empty/default values", async () => {
+      const licenseCreationParams: LicenseCreation = {
+        params: [],
+        parentLicenseId: "0",
+        ipaId: "0",
+      };
+
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: "0x35d3f0B8711Df409dd996154eE82c1A4332E5Fc8", // shared wallet
+        // ipOrgId: "0x0cEeeFC9AC23755d8786D4d580E1E7cccc25DE12", // ee2a
+        params: licenseCreationParams,
+        preHookData: [],
+        postHookData: [],
         txOptions: {
-          waitForTransaction,
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
         },
       };
 
-      const response = await expect(client.license.create(createLicenseNftRequest)).to.not.be
-        .rejected;
+      const response = await expect(client.license.create(createLicenseRequest)).to.not.be.rejected;
 
+      console.log("response", response);
       expect(response.txHash).to.be.a("string");
-      expect(response.txHash).not.empty;
-    });
-
-    it("should be able to register a license NFT (wait for txn)", async () => {
-      const waitForTransaction: boolean = true;
-      const createLicenseNftRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
-        isCommercial: false,
-        licensee: wallet.address,
-        preHooksCalldata: [],
-        postHooksCalldata: [],
-        txOptions: {
-          waitForTransaction,
-        },
-      };
-
-      const response = await expect(client.license.create(createLicenseNftRequest)).to.not.be
-        .rejected;
-      expect(response.txHash).to.be.a("string");
-      expect(response.txHash).not.empty;
+      expect(response.txHash).not.be.undefined;
 
       expect(response.licenseId).to.be.a("string");
-      expect(response.licenseId).not.empty;
+      expect(response.licenseId).not.be.undefined;
     });
+  });
 
-    it("should be able to register an IPA-bound license (don't wait for txn)", async () => {
-      const waitForTransaction: boolean = false;
-      const createIpaBoundLicenseRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
-        isCommercial: false,
-        ipaId: 1,
-        preHooksCalldata: [],
-        postHooksCalldata: [],
-        txOptions: {
-          waitForTransaction,
-        },
-      };
+  describe("Configuring license", async function () {
+    it.only("should be able to configure license with default values", async () => {
+      /*
+					Since an IPO's framework can only be configured once,
+					we need to create new ones for the test
 
-      const response = await expect(client.license.create(createIpaBoundLicenseRequest)).to.not.be
-        .rejected;
-
-      expect(response.txHash).to.be.a("string");
-      expect(response.txHash).not.empty;
-    });
-
-    it("should be able to register an IPA-bound license (wait for txn)", async () => {
+					1. Create new IPO
+					2. Configure license
+			*/
       const waitForTransaction: boolean = true;
-      const createIpaBoundLicenseRequest = {
-        ipOrgId: "0x1eBb43775fCC45CF05eaa96182C8762220e17941",
-        isCommercial: false,
-        ipaId: 1,
-        preHooksCalldata: [],
-        postHooksCalldata: [],
+      const createIpoResponse = await expect(
+        client.ipOrg.create({
+          name: "Alice In Wonderland",
+          symbol: "AIW",
+          owner: senderAddress,
+          ipAssetTypes: ["Story", "Character"],
+          txOptions: {
+            waitForTransaction: waitForTransaction,
+          },
+        }),
+      ).to.not.be.rejected;
+      console.log("createIpoResponse", createIpoResponse);
+      expect(createIpoResponse.txHash).to.be.a("string");
+      expect(createIpoResponse.txHash).not.empty;
+      expect(createIpoResponse.ipOrgId).to.be.a("string");
+      expect(createIpoResponse.ipOrgId).not.empty;
+
+      // Configure license
+      const licenseConfig: LicensingConfig = {
+        frameworkId: "SPIP-1.0",
+        params: [],
+        licensor: 1,
+      };
+
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: createIpoResponse.ipOrgId,
+        config: licenseConfig,
         txOptions: {
-          waitForTransaction,
+          waitForTransaction: false,
+          gasPrice: parseGwei("250"),
         },
       };
 
-      const response = await expect(client.license.create(createIpaBoundLicenseRequest)).to.not.be
-        .rejected;
+      // const response = await client.license.configure(configureLicenseRequest);
+      // console.log("response", response);
 
-      expect(response.txHash).to.be.a("string");
-      expect(response.txHash).not.empty;
+      // expect(response.txHash).to.be.a("string");
+      // expect(response.txHash).not.be.undefined;
 
-      expect(response.licenseId).to.be.a("string");
-      expect(response.licenseId).not.empty;
+      // expect(response.ipOrgTerms).to.be.a("object");
+      // expect(response.ipOrgTerms).not.be.undefined;
     });
   });
 });

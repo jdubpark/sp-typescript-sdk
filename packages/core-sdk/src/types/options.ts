@@ -1,5 +1,6 @@
 export type TxOptions = {
   waitForTransaction?: boolean;
+  gasPrice?: bigint;
 };
 
 export type QueryOptions = {

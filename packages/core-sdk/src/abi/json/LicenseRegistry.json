@@ -1,86 +1,35 @@
 [
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "ipaRegistry_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "moduleRegistry_",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "ipaRegistry_", "type": "address" },
+      { "internalType": "address", "name": "moduleRegistry_", "type": "address" },
+      { "internalType": "address", "name": "licensingFrameworkRepo_", "type": "address" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
+  { "inputs": [], "name": "LicenseRegistry_CallerNotLicensingModule", "type": "error" },
   {
     "inputs": [],
-    "name": "LicenseRegistry_CallerNotLicensingModule",
+    "name": "LicenseRegistry_CallerNotLicensingModuleOrLicensee",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_CallerNotRevoker",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_InvalidIpa",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_InvalidLicenseStatus",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_LicenseNotPending",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_NotLicenseNFT",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_UnknownLicenseId",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_ZeroIpaRegistryAddress",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "LicenseRegistry_ZeroModuleRegistryAddress",
-    "type": "error"
-  },
+  { "inputs": [], "name": "LicenseRegistry_CallerNotLicensor", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_CallerNotRevoker", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_IPANotActive", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_InvalidLicenseStatus", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_LicenseAlreadyLinkedToIpa", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_LicenseNotActive", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_LicenseNotPendingApproval", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_ParentLicenseNotActive", "type": "error" },
+  { "inputs": [], "name": "LicenseRegistry_UnknownLicenseId", "type": "error" },
+  { "inputs": [], "name": "ZeroAddress", "type": "error" },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "approved",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "owner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "approved", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "Approval",
     "type": "event"
@@ -88,24 +37,9 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "approved",
-        "type": "bool"
-      }
+      { "indexed": true, "internalType": "address", "name": "owner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+      { "indexed": false, "internalType": "bool", "name": "approved", "type": "bool" }
     ],
     "name": "ApprovalForAll",
     "type": "event"
@@ -113,12 +47,7 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "licenseId",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "uint256", "name": "licenseId", "type": "uint256" }
     ],
     "name": "LicenseActivated",
     "type": "event"
@@ -126,30 +55,32 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "licenseId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "ipAssetId",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "uint256", "name": "licenseId", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "ipAssetId", "type": "uint256" }
     ],
-    "name": "LicenseNftBoundedToIpa",
+    "name": "LicenseNftLinkedToIpa",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "id", "type": "uint256" },
       {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
+        "components": [
+          { "internalType": "enum Licensing.LicenseStatus", "name": "status", "type": "uint8" },
+          { "internalType": "bool", "name": "isReciprocal", "type": "bool" },
+          { "internalType": "bool", "name": "derivativeNeedsApproval", "type": "bool" },
+          { "internalType": "address", "name": "revoker", "type": "address" },
+          { "internalType": "address", "name": "licensor", "type": "address" },
+          { "internalType": "address", "name": "ipOrg", "type": "address" },
+          { "internalType": "ShortString", "name": "frameworkId", "type": "bytes32" },
+          { "internalType": "uint256", "name": "ipaId", "type": "uint256" },
+          { "internalType": "uint256", "name": "parentLicenseId", "type": "uint256" }
+        ],
+        "indexed": false,
+        "internalType": "struct Licensing.LicenseData",
+        "name": "licenseData",
+        "type": "tuple"
       }
     ],
     "name": "LicenseRegistered",
@@ -158,12 +89,7 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "licenseId",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "uint256", "name": "licenseId", "type": "uint256" }
     ],
     "name": "LicenseRevoked",
     "type": "event"
@@ -171,24 +97,9 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "from", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "to", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "Transfer",
     "type": "event"
@@ -196,12 +107,15 @@
   {
     "inputs": [],
     "name": "IPA_REGISTRY",
+    "outputs": [{ "internalType": "contract IPAssetRegistry", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "LICENSING_FRAMEWORK_REPO",
     "outputs": [
-      {
-        "internalType": "contract IPAssetRegistry",
-        "name": "",
-        "type": "address"
-      }
+      { "internalType": "contract LicensingFrameworkRepo", "name": "", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -209,24 +123,22 @@
   {
     "inputs": [],
     "name": "MODULE_REGISTRY",
-    "outputs": [
-      {
-        "internalType": "contract ModuleRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "contract ModuleRegistry", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "licenseId_",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "licenseId_", "type": "uint256" },
+      { "internalType": "address", "name": "caller_", "type": "address" }
     ],
+    "name": "activateLicense",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "licenseId_", "type": "uint256" }],
     "name": "activateLicense",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -236,146 +148,52 @@
     "inputs": [
       {
         "components": [
-          {
-            "internalType": "bool",
-            "name": "isCommercial",
-            "type": "bool"
-          },
-          {
-            "internalType": "enum Licensing.LicenseStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "licensor",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "revoker",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "ipOrg",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "parentLicenseId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "ShortString[]",
-            "name": "termIds",
-            "type": "bytes32[]"
-          },
-          {
-            "internalType": "bytes[]",
-            "name": "termsData",
-            "type": "bytes[]"
-          }
+          { "internalType": "enum Licensing.LicenseStatus", "name": "status", "type": "uint8" },
+          { "internalType": "bool", "name": "isReciprocal", "type": "bool" },
+          { "internalType": "bool", "name": "derivativeNeedsApproval", "type": "bool" },
+          { "internalType": "address", "name": "revoker", "type": "address" },
+          { "internalType": "address", "name": "licensor", "type": "address" },
+          { "internalType": "address", "name": "ipOrg", "type": "address" },
+          { "internalType": "ShortString", "name": "frameworkId", "type": "bytes32" },
+          { "internalType": "uint256", "name": "ipaId", "type": "uint256" },
+          { "internalType": "uint256", "name": "parentLicenseId", "type": "uint256" }
         ],
-        "internalType": "struct Licensing.RegistryAddition",
-        "name": "params_",
+        "internalType": "struct Licensing.LicenseData",
+        "name": "newLicense_",
         "type": "tuple"
       },
-      {
-        "internalType": "uint256",
-        "name": "ipaId_",
-        "type": "uint256"
-      }
-    ],
-    "name": "addBoundToIpaLicense",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      { "internalType": "address", "name": "licensee_", "type": "address" },
       {
         "components": [
-          {
-            "internalType": "bool",
-            "name": "isCommercial",
-            "type": "bool"
-          },
-          {
-            "internalType": "enum Licensing.LicenseStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "licensor",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "revoker",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "ipOrg",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "parentLicenseId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "ShortString[]",
-            "name": "termIds",
-            "type": "bytes32[]"
-          },
-          {
-            "internalType": "bytes[]",
-            "name": "termsData",
-            "type": "bytes[]"
-          }
+          { "internalType": "ShortString", "name": "tag", "type": "bytes32" },
+          { "internalType": "bytes", "name": "value", "type": "bytes" }
         ],
-        "internalType": "struct Licensing.RegistryAddition",
-        "name": "params_",
-        "type": "tuple"
-      },
-      {
-        "internalType": "address",
-        "name": "licensee_",
-        "type": "address"
+        "internalType": "struct Licensing.ParamValue[]",
+        "name": "values_",
+        "type": "tuple[]"
       }
     ],
-    "name": "addTradeableLicense",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "name": "addLicense",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "parentLicenseId_", "type": "uint256" },
+      { "internalType": "address", "name": "licensor_", "type": "address" },
+      { "internalType": "address", "name": "licensee_", "type": "address" },
+      { "internalType": "uint256", "name": "ipaId_", "type": "uint256" }
+    ],
+    "name": "addReciprocalLicense",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "approve",
     "outputs": [],
@@ -383,125 +201,57 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
     "name": "balanceOf",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "licenseId_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "ipaId_",
-        "type": "uint256"
-      }
-    ],
-    "name": "bindLnftToIpa",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "derivativeNeedsApproval",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
     "name": "getApproved",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "id_",
-        "type": "uint256"
-      }
-    ],
-    "name": "getLicense",
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "getIPOrg",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "getIpaId",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "getLicenseData",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "bool",
-            "name": "isCommercial",
-            "type": "bool"
-          },
-          {
-            "internalType": "enum Licensing.LicenseStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "licensor",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "revoker",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "ipOrg",
-            "type": "address"
-          },
-          {
-            "internalType": "enum Licensing.LicenseeType",
-            "name": "licenseeType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "ipaId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "parentLicenseId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "ShortString[]",
-            "name": "termIds",
-            "type": "bytes32[]"
-          },
-          {
-            "internalType": "bytes[]",
-            "name": "termsData",
-            "type": "bytes[]"
-          }
+          { "internalType": "enum Licensing.LicenseStatus", "name": "status", "type": "uint8" },
+          { "internalType": "bool", "name": "isReciprocal", "type": "bool" },
+          { "internalType": "bool", "name": "derivativeNeedsApproval", "type": "bool" },
+          { "internalType": "address", "name": "revoker", "type": "address" },
+          { "internalType": "address", "name": "licensor", "type": "address" },
+          { "internalType": "address", "name": "ipOrg", "type": "address" },
+          { "internalType": "ShortString", "name": "frameworkId", "type": "bytes32" },
+          { "internalType": "uint256", "name": "ipaId", "type": "uint256" },
+          { "internalType": "uint256", "name": "parentLicenseId", "type": "uint256" }
         ],
-        "internalType": "struct Licensing.License",
+        "internalType": "struct Licensing.LicenseData",
         "name": "",
         "type": "tuple"
       }
@@ -510,126 +260,100 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "id_",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
     "name": "getLicensee",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "id_",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
     "name": "getLicensor",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "getParams",
     "outputs": [
       {
-        "internalType": "address",
+        "components": [
+          { "internalType": "ShortString", "name": "tag", "type": "bytes32" },
+          { "internalType": "bytes", "name": "value", "type": "bytes" }
+        ],
+        "internalType": "struct Licensing.ParamValue[]",
         "name": "",
-        "type": "address"
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "getParentLicenseId",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "getRevoker",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "address", "name": "operator", "type": "address" }
     ],
     "name": "isApprovedForAll",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "licenseId_", "type": "uint256" }],
+    "name": "isLicenseActive",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id_", "type": "uint256" }],
+    "name": "isReciprocal",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "licenseId_",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "licenseId_", "type": "uint256" },
+      { "internalType": "uint256", "name": "ipaId_", "type": "uint256" }
     ],
-    "name": "isLicenseActive",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "linkLnftToIpa",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "name",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
     "name": "ownerOf",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "licenseId_",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "licenseId_", "type": "uint256" }],
     "name": "revokeLicense",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -637,21 +361,9 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "safeTransferFrom",
     "outputs": [],
@@ -660,26 +372,10 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
     ],
     "name": "safeTransferFrom",
     "outputs": [],
@@ -688,16 +384,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "approved",
-        "type": "bool"
-      }
+      { "internalType": "address", "name": "operator", "type": "address" },
+      { "internalType": "bool", "name": "approved", "type": "bool" }
     ],
     "name": "setApprovalForAll",
     "outputs": [],
@@ -705,73 +393,31 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "interfaceId",
-        "type": "bytes4"
-      }
-    ],
+    "inputs": [{ "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }],
     "name": "supportsInterface",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "symbol",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
     "name": "tokenURI",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "transferFrom",
     "outputs": [],
