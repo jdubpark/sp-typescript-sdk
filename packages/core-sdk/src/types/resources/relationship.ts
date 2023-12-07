@@ -4,7 +4,6 @@ import { TypedData } from "../common";
 export type Relationship = {
   id: string;
   type: string; // i.e. "APPEARS_IN"
-  typeId: string;
   srcContract: string;
   srcTokenId: string;
   dstContract: string;
@@ -38,7 +37,6 @@ export type RegisterRelationshipRequest = {
 export type RegisterRelationshipResponse = {
   txHash: string;
   relationshipId?: string;
-  success?: boolean;
 };
 
 /**

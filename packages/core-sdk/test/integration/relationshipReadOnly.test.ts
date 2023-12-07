@@ -1,34 +1,37 @@
+import { expect } from "chai";
 import {
   StoryClient,
   StoryReadOnlyConfig,
   ReadOnlyClient,
   ListRelationshipRequest,
+  Relationship,
 } from "../../src";
 
-describe("Relationship Read Only Functions", () => {
+describe("Relationship Read Only Functions", function () {
   let client: ReadOnlyClient;
 
   before(async function () {
     const config: StoryReadOnlyConfig = {};
-
     client = StoryClient.newReadOnlyClient(config);
   });
 
   describe("Get Relationship", async function () {
     it("should retrieve a relationship by its ID", async function () {
-      return client.relationship
-        .get({
+      const response = await expect(
+        client.relationship.get({
           relationshipId: "1", // Provide a valid ID
-        })
-        .should.eventually.have.property("relationship");
+        }),
+      ).to.not.be.rejected;
+      expect(response).to.have.property("relationship");
+      expectRelationshipFields(response.relationship);
     });
 
     it("should throw errors when retrieving an invalid relationship", async function () {
-      return client.relationship
-        .get({
+      return expect(
+        client.relationship.get({
           relationshipId: "invalid_id", // Provide an invalid ID
-        })
-        .should.be.rejectedWith(Error);
+        }),
+      ).to.be.rejected;
     });
   });
 
@@ -44,10 +47,12 @@ describe("Relationship Read Only Functions", () => {
           },
         },
       };
-      return client.relationship
-        .list(mockListRelationshipRequest)
-        .should.eventually.have.property("relationships")
-        .lengthOf(1);
+      const response = await client.relationship.list(mockListRelationshipRequest);
+
+      expect(response).to.have.property("relationships");
+      expect(response.relationships).to.be.an("array");
+      expect(response.relationships.length).to.gt(0);
+      expectRelationshipFields(response.relationships[0]);
     });
 
     it("should handle errors when listing licenses with invalid id", async function () {
@@ -61,9 +66,27 @@ describe("Relationship Read Only Functions", () => {
           },
         },
       };
-      return client.relationship
-        .list(mockInvalidListRelationshipRequest)
-        .should.eventually.be.rejectedWith(Error);
+      return expect(client.relationship.list(mockInvalidListRelationshipRequest)).to.be.rejected;
     });
   });
+
+  function expectRelationshipFields(relationship: Relationship) {
+    expect(relationship).to.have.property("id");
+    expect(relationship).to.have.property("type");
+    expect(relationship).to.have.property("srcContract");
+    expect(relationship).to.have.property("srcTokenId");
+    expect(relationship).to.have.property("dstContract");
+    expect(relationship).to.have.property("dstTokenId");
+    expect(relationship).to.have.property("registeredAt");
+    expect(relationship).to.have.property("txHash");
+
+    expect(relationship.id).to.be.a("string");
+    expect(relationship.type).to.be.a("string");
+    expect(relationship.srcContract).to.be.a("string");
+    expect(relationship.srcTokenId).to.be.a("string");
+    expect(relationship.dstContract).to.be.a("string");
+    expect(relationship.dstTokenId).to.be.a("string");
+    expect(relationship.registeredAt).to.be.a("string");
+    expect(relationship.txHash).to.be.a("string");
+  }
 });

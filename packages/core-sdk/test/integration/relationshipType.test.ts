@@ -1,27 +1,11 @@
 import { expect } from "chai";
-import { StoryClient, StoryConfig } from "../../src/index";
-import { Client } from "../../src/types/client";
+import { StoryClient, StoryConfig, Client, RegisterRelationshipTypeRequest } from "../../src";
 import { privateKeyToAccount } from "viem/accounts";
 import { Hex, http } from "viem";
 import { sepolia } from "viem/chains";
-import { RegisterRelationshipTypeRequest } from "../../src/types/resources/relationshipType";
 
-describe("Relationship Type Functions", () => {
+describe("Relationship Type Functions", function () {
   let client: Client;
-
-  const mockRegisterTypeRequest: RegisterRelationshipTypeRequest = {
-    ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
-    relType: "appears_in",
-    relatedElements: {
-      src: 1,
-      dst: 1,
-    },
-    allowedSrcIpAssetTypes: [1],
-    allowedDstIpAssetTypes: [1],
-    txOptions: {
-      waitForTransaction: false,
-    },
-  };
 
   before(function () {
     const config: StoryConfig = {
@@ -34,9 +18,28 @@ describe("Relationship Type Functions", () => {
   });
 
   describe("RegisterType", async function () {
-    it("should create a relationship type and return txHash", async () => {
-      await client.relationshipType.register(mockRegisterTypeRequest);
-      await expect(client.relationshipType.register(mockRegisterTypeRequest)).to.not.be.rejected;
+    it("should create a relationship type and return txHash", async function () {
+      const waitForTransaction: boolean = true;
+      const mockRegisterTypeRequest: RegisterRelationshipTypeRequest = {
+        ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
+        relType: "appears_in",
+        relatedElements: {
+          src: 1,
+          dst: 1,
+        },
+        allowedSrcIpAssetTypes: [1],
+        allowedDstIpAssetTypes: [1],
+        txOptions: {
+          waitForTransaction: waitForTransaction,
+        },
+      };
+      const response = await expect(client.relationshipType.register(mockRegisterTypeRequest)).to
+        .not.be.rejected;
+
+      expect(response.txHash).to.exist.and.be.a("string").and.not.be.empty;
+      if (waitForTransaction) {
+        expect(response.success).to.exist.and.be.true;
+      }
     });
   });
 });
