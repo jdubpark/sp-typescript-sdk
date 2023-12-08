@@ -44,10 +44,7 @@ export class HookReadOnlyClient {
    */
   public async list(request?: ListHookRequest): Promise<ListHookResponse> {
     try {
-      if (!request) {
-        request = {};
-      }
-      const response = await this.httpClient.post(`/protocol/hook`, request, {
+      const response = await this.httpClient.post(`/protocol/hook`, request || {}, {
         params: {
           moduleId: request?.moduleId,
         },

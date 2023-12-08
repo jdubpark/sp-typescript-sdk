@@ -11,9 +11,7 @@ import { handleError } from "../utils/errors";
 import { isIntegerString } from "../utils/utils";
 
 /**
- * A class representing License operations.
- *
- * @public
+ * LicenseReadOnlyClient allows you to view and search relationships on Story Protocol.
  */
 export class LicenseReadOnlyClient {
   protected readonly httpClient: AxiosInstance;
@@ -25,10 +23,10 @@ export class LicenseReadOnlyClient {
   }
 
   /**
-   * Get a license by its ID.
+   * Get a license's data based on the specified license id.
    *
-   * @param licenseId - The ID of the license to retrieve.
-   * @returns A Promise that resolves to the GetLicenseResponse.
+   * @param request - the request object for getting the license
+   * @returns the response object that contains the fetched license object
    */
   public async get(request: GetLicenseRequest): Promise<GetLicenseResponse> {
     try {
@@ -47,16 +45,13 @@ export class LicenseReadOnlyClient {
   }
 
   /**
-   * List all licenses.
+   * List licenses.
    *
-   * @returns A Promise that resolves to the ListLicenseResponse.
+   * @returns the response object that contains a list of licenses
    */
   public async list(request?: ListLicenseRequest): Promise<ListLicenseResponse> {
     try {
-      if (!request) {
-        request = {};
-      }
-      const response = await this.httpClient.post("/protocol/license", request, {
+      const response = await this.httpClient.post("/protocol/license", request || {}, {
         params: {
           ipOrgId: request?.ipOrgId,
           ipAssetId: request?.ipAssetId,

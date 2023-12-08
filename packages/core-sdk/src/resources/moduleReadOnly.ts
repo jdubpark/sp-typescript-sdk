@@ -43,10 +43,7 @@ export class ModuleReadOnlyClient {
    */
   public async list(request?: ListModuleRequest): Promise<ListModuleResponse> {
     try {
-      if (!request) {
-        request = {};
-      }
-      const response = await this.httpClient.post(`/protocol/module`, request, {
+      const response = await this.httpClient.post(`/protocol/module`, request || {}, {
         params: {
           ipOrgId: request?.ipOrgId,
         },

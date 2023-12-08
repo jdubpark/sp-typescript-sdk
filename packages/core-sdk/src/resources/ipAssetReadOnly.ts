@@ -48,10 +48,7 @@ export class IPAssetReadOnlyClient {
    */
   public async list(request?: ListIpAssetRequest): Promise<ListIpAssetResponse> {
     try {
-      if (!request) {
-        request = {};
-      }
-      const response = await this.httpClient.post(`/protocol/ipasset`, request);
+      const response = await this.httpClient.post(`/protocol/ipasset`, request || {});
       return response.data as ListIpAssetResponse;
     } catch (error) {
       handleError(error, "Failed to list IP Asset.");
