@@ -27,12 +27,11 @@ describe("Test LicenseClient", function () {
   });
 
   describe("Test licenseClient.create", async function () {
+    const txHash = "0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997";
     it("should create a license NFT (don't wait txn)", async function () {
       rpcMock.readContract = sinon.stub().resolves(AddressZero);
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      walletMock.writeContract = sinon.stub().resolves(txHash);
 
       const createLicenseNftRequest = {
         ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
@@ -46,9 +45,7 @@ describe("Test LicenseClient", function () {
       };
 
       const createTxn = await licenseClient.create(createLicenseNftRequest);
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
+      expect(createTxn.txHash).to.equal(txHash);
     });
 
     it("should create a license NFT (wait txn)", async function () {
@@ -88,20 +85,14 @@ describe("Test LicenseClient", function () {
       };
 
       const createTxn = await licenseClient.create(createLicenseNftRequest);
-
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
-      expect(createTxn).to.have.property("licenseId");
-      expect(createTxn.licenseId).to.be.a("string");
+      expect(createTxn.txHash).to.equal(txHash);
+      expect(createTxn.licenseId).to.equal("20");
     });
 
     it("should create an IPA-bound license (don't wait txn)", async function () {
       rpcMock.readContract = sinon.stub().resolves(AddressZero);
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      walletMock.writeContract = sinon.stub().resolves(txHash);
 
       const createIpaBoundLicenseRequest = {
         ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
@@ -115,9 +106,7 @@ describe("Test LicenseClient", function () {
       };
 
       const createTxn = await licenseClient.create(createIpaBoundLicenseRequest);
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
+      expect(createTxn.txHash).to.equal(txHash);
     });
 
     it("should create an IPA-bound license (wait txn)", async function () {
@@ -141,9 +130,7 @@ describe("Test LicenseClient", function () {
           },
         ],
       });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      walletMock.writeContract = sinon.stub().resolves(txHash);
 
       const createIpaBoundLicenseRequest = {
         ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
@@ -157,11 +144,8 @@ describe("Test LicenseClient", function () {
       };
 
       const createTxn = await licenseClient.create(createIpaBoundLicenseRequest);
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
-      expect(createTxn).to.have.property("licenseId");
-      expect(createTxn.licenseId).to.be.a("string");
+      expect(createTxn.txHash).to.equal(txHash);
+      expect(createTxn.licenseId).to.equal("20");
     });
 
     it("should throw error when request fails", async function () {
@@ -206,7 +190,9 @@ describe("Test LicenseClient", function () {
       };
 
       //@ts-ignore
-      await expect(licenseClient.create(createLicenseNftRequest)).to.be.rejected;
+      await expect(licenseClient.create(createLicenseNftRequest)).to.be.rejectedWith(
+        "Invalid request type",
+      );
     });
   });
 });

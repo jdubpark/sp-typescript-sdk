@@ -6,6 +6,7 @@ import * as sinon from "sinon";
 import chaiAsPromised from "chai-as-promised";
 import { AxiosInstance } from "axios";
 import { PublicClient, WalletClient } from "viem";
+import exp from "constants";
 
 chai.use(chaiAsPromised);
 
@@ -33,21 +34,22 @@ describe("Test Relationship Type Client", function () {
         .stub()
         .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
 
-      await expect(
-        relationshipClient.register({
-          ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
-          relType: "appears_in",
-          relatedElements: {
-            src: 1,
-            dst: 1,
-          },
-          allowedSrcIpAssetTypes: [1],
-          allowedDstIpAssetTypes: [1],
-          txOptions: {
-            waitForTransaction: false,
-          },
-        }),
-      ).not.to.be.rejected;
+      const resp = await relationshipClient.register({
+        ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
+        relType: "appears_in",
+        relatedElements: {
+          src: 1,
+          dst: 1,
+        },
+        allowedSrcIpAssetTypes: [1],
+        allowedDstIpAssetTypes: [1],
+        txOptions: {
+          waitForTransaction: false,
+        },
+      });
+      expect(resp.txHash).to.be.equal(
+        "0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997",
+      );
     });
 
     it("should not throw error when registering a relationship type and wait for transaction confirmed", async function () {
@@ -74,21 +76,22 @@ describe("Test Relationship Type Client", function () {
         ],
       });
 
-      await expect(
-        relationshipClient.register({
-          ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
-          relType: "appears_in",
-          relatedElements: {
-            src: 1,
-            dst: 1,
-          },
-          allowedSrcIpAssetTypes: [1],
-          allowedDstIpAssetTypes: [1],
-          txOptions: {
-            waitForTransaction: true,
-          },
-        }),
-      ).not.to.be.rejected;
+      const resp = await relationshipClient.register({
+        ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
+        relType: "appears_in",
+        relatedElements: {
+          src: 1,
+          dst: 1,
+        },
+        allowedSrcIpAssetTypes: [1],
+        allowedDstIpAssetTypes: [1],
+        txOptions: {
+          waitForTransaction: true,
+        },
+      });
+      expect(resp.txHash).to.be.equal(
+        "0x6bf8053b1e8ffdc8a767938b14a59eb1e08cf8821743be7f8377e5bad77f76a8",
+      );
     });
 
     it("should throw error when registerRelationshipType reverts", async function () {
@@ -137,8 +140,8 @@ describe("Test Relationship Type Client", function () {
         ],
       });
 
-      try {
-        await relationshipClient.register({
+      await expect(
+        relationshipClient.register({
           ipOrgId: "0xb422E54932c1dae83E78267A4DD2805aa64A8061",
           relType: "appears_in",
           relatedElements: {
@@ -153,10 +156,9 @@ describe("Test Relationship Type Client", function () {
             waitForTransaction: true,
           },
         }),
-          expect.fail(
-            `Failed to create relationship: not found event RelationshipTypeSet in target transaction`,
-          );
-      } catch (error) {}
+      ).to.be.rejectedWith(
+        "Failed to register relationship type: not found event RelationshipTypeSet in target transaction",
+      );
     });
   });
 });

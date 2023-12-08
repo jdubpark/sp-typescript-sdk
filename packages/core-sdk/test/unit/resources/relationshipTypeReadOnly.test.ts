@@ -70,15 +70,32 @@ describe("Test RelationshipTypeReadOnlyClient", function () {
     });
 
     it("should throw error if asset id is invalid", async function () {
-      try {
-        await relationshipTypeClient.get({
-          ipOrgId: "0xb422e54932c1dae83e78267a4dd2805aa64a8051", // invalid ipOrgId
+      const mockResponse: { data: GetRelationshipTypeResponse } = {
+        data: {
+          relationshipType: {
+            dstContract: "0x177175a4b26f6ea050676f8c9a14d395f896492c",
+            dstRelatable: 1,
+            dstSubtypesMask: 0,
+            ipOrgId: "0xb422e54932c1dae83e78267a4dd2805aa64a8061",
+            type: "0xc12a5f0d1e5a95f4fc32ff629c53defa11273a372e29ae51ab24323e4af84fc3",
+            srcContract: "0x177175a4b26f6ea050676f8c9a14d395f896492c",
+            srcRelatable: 1,
+            srcSubtypesMask: 0,
+            txHash: "0x02230010bf433393ad3999c95a2af63c73bf8e5c620c5e607de7648d7a8565a6",
+            registeredAt: "2021-09-14T00:00:00Z",
+          },
+        },
+      };
+
+      axiosMock.get = sinon.stub().resolves(mockResponse);
+      await expect(
+        relationshipTypeClient.get({
+          ipOrgId: "0xb422e54932c1dae83e78267a4dd2805aa64a61", // invalid ipOrgId
           relType: "0xc12a5f0d1e5a95f4fc32ff629c53defa11273a372e29ae51ab24323e4af84fc3",
-        });
-        expect.fail(`Function should not get here, it should throw an error `);
-      } catch (error) {
-        // function is expected to throw.
-      }
+        }),
+      ).to.be.rejectedWith(
+        `Failed to get relationship type: Invalid ipOrgId. Must be an address. But got: 0xb422e54932c1dae83e78267a4dd2805aa64a61`,
+      );
     });
   });
 
@@ -116,7 +133,6 @@ describe("Test RelationshipTypeReadOnlyClient", function () {
 
       axiosMock.post = sinon.stub().resolves(mockResponse);
       const response = await relationshipTypeClient.list(mockListRequest);
-
       expect(response).to.deep.equal(mockResponse.data);
     });
 
@@ -153,7 +169,6 @@ describe("Test RelationshipTypeReadOnlyClient", function () {
 
         axiosMock.post = sinon.stub().resolves(mockResponse);
         const response = await relationshipTypeClient.list(mockListRequest);
-
         expect(response).to.deep.equal(mockResponse.data);
       });
 
