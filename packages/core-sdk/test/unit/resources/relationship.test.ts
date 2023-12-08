@@ -54,7 +54,7 @@ describe("Test RelationshipClient", function () {
         ],
         txOptions: {
           waitForTransaction: false,
-      },
+        },
       });
 
       expect(resp.txHash).to.be.equal(
@@ -96,7 +96,7 @@ describe("Test RelationshipClient", function () {
         txOptions: {
           waitForTransaction: true,
         },
-    });
+      });
 
       expect(resp.txHash).to.be.equal(
         "0x6bf8053b1e8ffdc8a767938b14a59eb1e08cf8821743be7f8377e5bad77f76a8",
