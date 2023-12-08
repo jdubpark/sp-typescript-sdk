@@ -1,14 +1,9 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { StoryClient, StoryConfig, Client } from "../../src";
-import * as dotenv from "dotenv";
 import { createFileReaderMock } from "../unit/testUtils";
 import { goerli } from "viem/chains";
 import { Hex, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-
-dotenv.config();
-chai.use(chaiAsPromised);
 
 describe("Platform client integration tests", () => {
   let client: Client;

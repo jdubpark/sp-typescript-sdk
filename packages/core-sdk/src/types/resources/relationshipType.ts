@@ -92,5 +92,4 @@ export type RegisterRelationshipTypeRequest = {
 export type RegisterRelationshipTypeResponse = {
   txHash: string;
   success?: boolean;
-  relationshipId?: string;
 };
