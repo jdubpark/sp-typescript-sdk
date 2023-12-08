@@ -65,7 +65,6 @@ describe("License Functions", () => {
       };
 
       const response = await client.license.configure(configureLicenseRequest);
-      console.log("response", response);
 
       expect(response.txHash).to.be.a("string");
       expect(response.txHash).not.be.undefined;
