@@ -6,7 +6,7 @@ import {
   GetIPOrgResponse,
   ListIPOrgRequest,
   ListIPOrgResponse,
-} from "../types/resources/IPOrg";
+} from "../types/resources/ipOrg";
 import { handleError } from "../utils/errors";
 
 /**
@@ -46,10 +46,7 @@ export class IPOrgReadOnlyClient {
    */
   public async list(request?: ListIPOrgRequest): Promise<ListIPOrgResponse> {
     try {
-      if (!request) {
-        request = {};
-      }
-      const response = await this.httpClient.post("/protocol/iporg", request);
+      const response = await this.httpClient.post("/protocol/iporg", request || {});
       return response.data as ListIPOrgResponse;
     } catch (error: unknown) {
       handleError(error, "Failed to list IPOrgs.");

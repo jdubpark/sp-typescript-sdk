@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios";
 import { getAddress, PublicClient, WalletClient } from "viem";
 
-import { CreateIPOrgRequest, CreateIPOrgResponse } from "../types/resources/IPOrg";
+import { CreateIPOrgRequest, CreateIPOrgResponse } from "../types/resources/ipOrg";
 import { handleError } from "../utils/errors";
 import { IPOrgReadOnlyClient } from "./ipOrgReadOnly";
 import { storyProtocolConfig } from "../abi/storyProtocol.abi";

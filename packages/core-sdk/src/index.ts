@@ -28,7 +28,7 @@ export type {
   CreateIPOrgResponse,
   ListIPOrgRequest,
   ListIPOrgResponse,
-} from "./types/resources/IPOrg";
+} from "./types/resources/ipOrg";
 
 export type {
   IPAsset,

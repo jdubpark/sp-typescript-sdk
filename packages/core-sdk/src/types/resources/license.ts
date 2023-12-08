@@ -1,22 +1,20 @@
 import { QueryOptions, TxOptions } from "../options";
 
 /**
- * Represents the core data model for a License, containing essential information.
+ * Core data model for License.
  *
  * @public
  */
 export type License = {
-  id: number;
-  isCommercial: boolean;
+  id: string;
+  isReciprocal: boolean;
+  derivativeNeedsApproval: boolean;
   status: number;
   licensor: string;
   revoker: string;
   ipOrgId: string;
-  licenseeType: number;
   ipAssetId: string;
   parentLicenseId: string;
-  termIds: string[];
-  termsData: string[];
   createdAt: string;
   txHash: string;
 };
@@ -49,16 +47,16 @@ export interface CreateIpaBoundLicenseRequest extends CreateLicenseRequest {
 }
 
 /**
- * Represents the request structure for retrieving license details using the `franchise.get` method.
+ * Request type for license.get method.
  *
  * @public
  */
 export type GetLicenseRequest = {
-  licenseId: string; // Unique identifier of the license to retrieve.
+  licenseId: string;
 };
 
 /**
- * Represents the response structure for retrieving license details using the `license.get` method.
+ * Response type for license.get method.
  *
  * @public
  */
@@ -66,6 +64,11 @@ export type GetLicenseResponse = {
   license: License;
 };
 
+/**
+ * Request type for license.list method.
+ *
+ * @public
+ */
 export type ListLicenseRequest = {
   ipOrgId?: string;
   ipAssetId?: string;
@@ -73,7 +76,7 @@ export type ListLicenseRequest = {
 };
 
 /**
- * Represents the request structure for listing multiple licenses using the `license.list` method.
+ * Response type for license.list method.
  *
  * @public
  */

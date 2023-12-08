@@ -43,10 +43,7 @@ export class TransactionReadOnlyClient {
    */
   public async list(request?: ListTransactionRequest): Promise<ListTransactionResponse> {
     try {
-      if (!request) {
-        request = {};
-      }
-      const response = await this.httpClient.post(`/protocol/transaction`, request);
+      const response = await this.httpClient.post(`/protocol/transaction`, request || {});
       return response.data as ListTransactionResponse;
     } catch (error: unknown) {
       handleError(error, `Failed to list transactions`);
