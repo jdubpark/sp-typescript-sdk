@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import { getAddress, PublicClient, toHex, WalletClient } from "viem";
+import { getAddress, PublicClient, WalletClient } from "viem";
 
 import { CreateIpAssetRequest, CreateIpAssetResponse } from "../types/resources/ipAsset";
 import { handleError } from "../utils/errors";
@@ -36,7 +36,9 @@ export class IPAssetClient extends IPAssetReadOnlyClient {
             owner: getAddress(request.owner || this.wallet.account!.address),
             name: request.name,
             ipOrgAssetType: parseToBigInt(request.typeIndex),
-            hash: toHex(request.contentHash || "", { size: 32 }),
+            hash:
+              request.contentHash ||
+              "0x0000000000000000000000000000000000000000000000000000000000000000",
             mediaUrl: request.mediaUrl || "",
           },
           request.preHookData ? typedDataArrayToBytesArray(request.preHookData) : [],
