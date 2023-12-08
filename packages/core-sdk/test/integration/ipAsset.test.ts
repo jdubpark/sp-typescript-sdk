@@ -28,8 +28,30 @@ describe("IP Asset Functions", () => {
           typeIndex: 0,
           ipOrgId: process.env.TEST_IPORG_ID as string,
           owner: senderAddress,
-          contentHash: "",
-          mediaUrl: "",
+          txOptions: {
+            waitForTransaction: waitForTransaction,
+          },
+        }),
+      ).to.not.be.rejected;
+
+      expect(response.txHash).to.be.a("string");
+      expect(response.txHash).not.empty;
+
+      if (waitForTransaction) {
+        expect(response.ipAssetId).to.be.a("string");
+        expect(response.ipAssetId).not.empty;
+      }
+    });
+
+    it("should not throw error when creating an IP Asset with contentHash (SHA256)", async () => {
+      const waitForTransaction: boolean = true;
+      const response = await expect(
+        client.ipAsset.create({
+          name: "Test",
+          typeIndex: 0,
+          ipOrgId: process.env.TEST_IPORG_ID as string,
+          owner: senderAddress,
+          contentHash: "0x0ffc6cd05f97735c7f621791f127c4b298159bce126a78acc2d4eaad729ca587",
           txOptions: {
             waitForTransaction: waitForTransaction,
           },
@@ -52,7 +74,6 @@ describe("IP Asset Functions", () => {
           name: "Test",
           typeIndex: 0,
           ipOrgId: process.env.TEST_IPORG_ID as string,
-          contentHash: "",
           mediaUrl: "",
           txOptions: {
             waitForTransaction: waitForTransaction,
@@ -77,8 +98,6 @@ describe("IP Asset Functions", () => {
           typeIndex: 0,
           ipOrgId: process.env.TEST_IPORG_ID_WITH_HOOK as string,
           owner: senderAddress,
-          contentHash: "",
-          mediaUrl: "",
           preHookData: [
             {
               interface: "address",
@@ -108,8 +127,6 @@ describe("IP Asset Functions", () => {
           typeIndex: 0,
           ipOrgId: "0x2554E198752d0F086c8b885CbCc5d663365673C2",
           owner: senderAddress,
-          contentHash: "",
-          mediaUrl: "",
           txOptions: {
             waitForTransaction: waitForTransaction,
           },

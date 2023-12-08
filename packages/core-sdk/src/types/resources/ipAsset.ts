@@ -52,7 +52,7 @@ export type CreateIpAssetRequest = {
   ipOrgId: string;
   owner?: string;
   mediaUrl?: string;
-  contentHash?: string;
+  contentHash?: `0x${string}`;
   preHookData?: Array<TypedData>;
   postHookData?: Array<TypedData>;
   txOptions?: TxOptions;
