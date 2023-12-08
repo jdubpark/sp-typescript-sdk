@@ -8,7 +8,7 @@ import { ListLicenseRequest, LicenseReadOnlyClient } from "../../../src";
 
 chai.use(chaiAsPromised);
 
-describe.only("Test LicenseReadOnlyClient", function () {
+describe("Test LicenseReadOnlyClient", function () {
   let licenseClient: LicenseReadOnlyClient;
   let axiosMock: AxiosInstance;
   let rpcMock: PublicClient;
