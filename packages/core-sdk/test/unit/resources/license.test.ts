@@ -8,9 +8,7 @@ import { LicenseClient } from "../../../src";
 import {
   ConfigureLicenseRequest,
   CreateLicenseRequest,
-  LicenseCreation,
   LicensingConfig,
-  ParamValue,
 } from "../../../src/types/resources/license";
 import { mockCreateAndConfigureLicenseLog } from "../utils/mockData";
 
@@ -48,16 +46,11 @@ describe(`Test License`, function () {
         logs: mockCreateAndConfigureLicenseLog,
       });
 
-      // Create license
-      const licenseCreationParams: LicenseCreation = {
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: ipOrgIdMock,
         params: [],
         parentLicenseId: "0",
         ipaId: "0",
-      };
-
-      const createLicenseRequest: CreateLicenseRequest = {
-        ipOrgId: ipOrgIdMock,
-        params: licenseCreationParams,
         preHookData: [],
         postHookData: [],
         txOptions: {
@@ -80,27 +73,15 @@ describe(`Test License`, function () {
         logs: mockCreateAndConfigureLicenseLog,
       });
 
-      const licenseParams: ParamValue[] = [
-        {
-          tag: "foo",
-          tagValue: toBytes("bar"),
-        },
-      ];
-
-      // Create license
-      const licenseCreationParams: LicenseCreation = {
-        params: licenseParams,
-        parentLicenseId: "0",
-        ipaId: "0",
-      };
-
       const createLicenseRequest: CreateLicenseRequest = {
         ipOrgId: ipOrgIdMock,
-        params: licenseCreationParams,
+        params: [],
+        parentLicenseId: "0",
+        ipaId: "0",
         preHookData: [],
         postHookData: [],
         txOptions: {
-          waitForTransaction: false,
+          waitForTransaction: true,
         },
       };
 
@@ -120,15 +101,11 @@ describe(`Test License`, function () {
       });
 
       // Configure license
-      const licenseConfig: LicensingConfig = {
-        frameworkId: "SPIP-1.0",
-        params: [],
-        licensor: 1,
-      };
-
       const configureLicenseRequest: ConfigureLicenseRequest = {
         ipOrg: ipOrgIdMock,
-        config: licenseConfig,
+        frameworkId: "SPUML-1.0",
+        params: [],
+        licensor: 1,
         txOptions: {
           waitForTransaction: true,
           gasPrice: parseGwei("250"),
@@ -151,15 +128,11 @@ describe(`Test License`, function () {
       });
 
       // Configure license
-      const licenseConfig: LicensingConfig = {
-        frameworkId: "SPIP-1.0",
-        params: [],
-        licensor: 1,
-      };
-
       const configureLicenseRequest: ConfigureLicenseRequest = {
         ipOrg: ipOrgIdMock,
-        config: licenseConfig,
+        frameworkId: "SPUML-1.0",
+        params: [],
+        licensor: 1,
         txOptions: {
           waitForTransaction: false,
           gasPrice: parseGwei("250"),
@@ -177,15 +150,11 @@ describe(`Test License`, function () {
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
       walletMock.writeContract = sinon.stub().rejects(new Error("http 500"));
 
-      const licenseCreationParams: LicenseCreation = {
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: ipOrgIdMock,
         params: [],
         parentLicenseId: "0",
         ipaId: "0",
-      };
-
-      const createLicenseRequest: CreateLicenseRequest = {
-        ipOrgId: ipOrgIdMock,
-        params: licenseCreationParams,
         preHookData: [],
         postHookData: [],
         txOptions: {
@@ -201,15 +170,11 @@ describe(`Test License`, function () {
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
       walletMock.writeContract = sinon.stub().rejects(new Error("http 500"));
       // Configure license
-      const licenseConfig: LicensingConfig = {
-        frameworkId: "SPIP-1.0",
-        params: [],
-        licensor: 1,
-      };
-
       const configureLicenseRequest: ConfigureLicenseRequest = {
         ipOrg: ipOrgIdMock,
-        config: licenseConfig,
+        frameworkId: "SPUML-1.0",
+        params: [],
+        licensor: 1,
         txOptions: {
           waitForTransaction: true,
           gasPrice: parseGwei("250"),

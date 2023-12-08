@@ -51,12 +51,10 @@ export type {
   ConfigureLicenseResponse,
   ListLicenseRequest,
   ListLicenseResponse,
-  ParamValue,
-  LicenseCreation,
   ParameterType,
   ParamDefinition,
   Framework,
-  LicensorConfig,
+  LicensorConfigEnum,
   LicensingConfig,
 } from "./types/resources/license";
 

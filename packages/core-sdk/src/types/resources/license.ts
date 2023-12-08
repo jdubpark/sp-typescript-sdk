@@ -22,17 +22,6 @@ export type License = {
   txHash: string;
 };
 
-export type ParamValue = {
-  tag: string | Uint8Array;
-  tagValue: Uint8Array;
-};
-
-export type LicenseCreation = {
-  params: ParamValue[]; // ParamValue[]
-  parentLicenseId: string;
-  ipaId: string; // address
-};
-
 export enum ParameterType {
   Bool,
   Number,
@@ -40,6 +29,11 @@ export enum ParameterType {
   String,
   MultipleChoice, // ShortString set
 }
+
+export type ParamValues = {
+  tag: string;
+  value: TypedData;
+};
 
 export type ParamDefinition = {
   tag: string;
@@ -52,16 +46,16 @@ export type Framework = {
   paramDefs: ParamDefinition[];
 };
 
-export enum LicensorConfig {
+export enum LicensorConfigEnum {
   Unset,
   IpOrgOwnerAlways,
-  ParentOrIpaOrIpOrgOwners,
+  Source,
 }
 
 export type LicensingConfig = {
   frameworkId: string;
-  params: ParamValue[];
-  licensor: LicensorConfig;
+  params: ParamValues[];
+  licensor: LicensorConfigEnum;
 };
 
 /**
@@ -69,11 +63,12 @@ export type LicensingConfig = {
  *
  * @public
  */
+
 export type CreateLicenseRequest = {
   ipOrgId: string;
-  params: LicenseCreation;
-  // preHooksCalldata?: Record<string, undefined>[];
-  // postHooksCalldata?: Record<string, undefined>[];
+  parentLicenseId: string;
+  ipaId: string;
+  params: ParamValues[];
   preHookData?: Array<TypedData>;
   postHookData?: Array<TypedData>;
   txOptions?: TxOptions;
@@ -96,7 +91,9 @@ export type CreateLicenseResponse = {
  */
 export type ConfigureLicenseRequest = {
   ipOrg: string;
-  config: LicensingConfig;
+  frameworkId: string;
+  params: ParamValues[];
+  licensor: LicensorConfigEnum;
   txOptions?: TxOptions;
 };
 

@@ -7,8 +7,8 @@ import { privateKeyToAccount } from "viem/accounts";
 import {
   ConfigureLicenseRequest,
   CreateLicenseRequest,
-  LicenseCreation,
   LicensingConfig,
+  LicensorConfigEnum,
 } from "../../src/types/resources/license";
 
 describe("License Functions", () => {
@@ -49,15 +49,11 @@ describe("License Functions", () => {
       expect(createIpoResponse.ipOrgId).not.empty;
 
       // Configure license
-      const licenseConfig: LicensingConfig = {
-        frameworkId: "SPIP-1.0",
-        params: [],
-        licensor: 1,
-      };
-
       const configureLicenseRequest: ConfigureLicenseRequest = {
         ipOrg: createIpoResponse.ipOrgId,
-        config: licenseConfig,
+        frameworkId: "SPUML-1.0",
+        params: [],
+        licensor: 1,
         txOptions: {
           waitForTransaction: true,
           gasPrice: parseGwei("250"),
@@ -71,6 +67,159 @@ describe("License Functions", () => {
 
       expect(response.ipOrgTerms).to.be.a("object");
       expect(response.ipOrgTerms).not.be.undefined;
+    });
+    it("should be able to configure with Attribution=true", async () => {
+      // 1. Create IPO first
+      // 2. Configure framework
+      // 3. Create license
+
+      const createIpoResponse = await expect(
+        client.ipOrg.create({
+          name: "Alice In Wonderland",
+          symbol: "AIW",
+          owner: senderAddress,
+          ipAssetTypes: ["Story", "Character"],
+          txOptions: {
+            waitForTransaction: true,
+          },
+        }),
+      ).to.not.be.rejected;
+      expect(createIpoResponse.txHash).to.be.a("string");
+      expect(createIpoResponse.txHash).not.empty;
+      expect(createIpoResponse.ipOrgId).to.be.a("string");
+      expect(createIpoResponse.ipOrgId).not.empty;
+
+      const attributionParam = {
+        tag: "Attribution",
+        value: {
+          interface: "bool",
+          data: [true],
+        },
+      };
+
+      const licenseParameters = [attributionParam];
+
+      // Configure license
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: createIpoResponse.ipOrgId,
+        frameworkId: "SPUML-1.0",
+        params: licenseParameters,
+        licensor: LicensorConfigEnum.Source,
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const configureResponse = await client.license.configure(configureLicenseRequest);
+
+      expect(configureResponse.txHash).to.be.a("string");
+      expect(configureResponse.txHash).not.be.undefined;
+
+      expect(configureResponse.ipOrgTerms).to.be.a("object");
+      expect(configureResponse.ipOrgTerms).not.be.undefined;
+    });
+    it("should be able to configure with Attribution=false", async () => {
+      // 1. Create IPO first
+      // 2. Configure framework
+      // 3. Create license
+
+      const createIpoResponse = await expect(
+        client.ipOrg.create({
+          name: "Alice In Wonderland",
+          symbol: "AIW",
+          owner: senderAddress,
+          ipAssetTypes: ["Story", "Character"],
+          txOptions: {
+            waitForTransaction: true,
+          },
+        }),
+      ).to.not.be.rejected;
+      expect(createIpoResponse.txHash).to.be.a("string");
+      expect(createIpoResponse.txHash).not.empty;
+      expect(createIpoResponse.ipOrgId).to.be.a("string");
+      expect(createIpoResponse.ipOrgId).not.empty;
+
+      const attributionParam = {
+        tag: "Attribution",
+        value: {
+          interface: "bool",
+          data: [false],
+        },
+      };
+
+      const licenseParameters = [attributionParam];
+
+      // Configure license
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: createIpoResponse.ipOrgId,
+        frameworkId: "SPUML-1.0",
+        params: licenseParameters,
+        licensor: LicensorConfigEnum.Source,
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const configureResponse = await client.license.configure(configureLicenseRequest);
+
+      expect(configureResponse.txHash).to.be.a("string");
+      expect(configureResponse.txHash).not.be.undefined;
+
+      expect(configureResponse.ipOrgTerms).to.be.a("object");
+      expect(configureResponse.ipOrgTerms).not.be.undefined;
+    });
+    it.skip("should be able to configure with Derivatives-Allowed=false", async () => {
+      // 1. Create IPO first
+      // 2. Configure framework
+      // 3. Create license
+
+      const createIpoResponse = await expect(
+        client.ipOrg.create({
+          name: "Alice In Wonderland",
+          symbol: "AIW",
+          owner: senderAddress,
+          ipAssetTypes: ["Story", "Character"],
+          txOptions: {
+            waitForTransaction: true,
+          },
+        }),
+      ).to.not.be.rejected;
+      expect(createIpoResponse.txHash).to.be.a("string");
+      expect(createIpoResponse.txHash).not.empty;
+      expect(createIpoResponse.ipOrgId).to.be.a("string");
+      expect(createIpoResponse.ipOrgId).not.empty;
+
+      const attributionParam = {
+        tag: "Derivatives-Allowed",
+        value: {
+          interface: "bool",
+          data: [false],
+        },
+      };
+
+      const licenseParameters = [attributionParam];
+
+      // Configure license
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: createIpoResponse.ipOrgId,
+        frameworkId: "SPUML-1.0",
+        params: licenseParameters,
+        licensor: LicensorConfigEnum.Source,
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const configureResponse = await client.license.configure(configureLicenseRequest);
+
+      expect(configureResponse.txHash).to.be.a("string");
+      expect(configureResponse.txHash).not.be.undefined;
+
+      expect(configureResponse.ipOrgTerms).to.be.a("object");
+      expect(configureResponse.ipOrgTerms).not.be.undefined;
     });
   });
 
@@ -97,15 +246,11 @@ describe("License Functions", () => {
       expect(createIpoResponse.ipOrgId).not.empty;
 
       // Configure license
-      const licenseConfig: LicensingConfig = {
-        frameworkId: "SPIP-1.0",
-        params: [],
-        licensor: 1,
-      };
-
       const configureLicenseRequest: ConfigureLicenseRequest = {
         ipOrg: createIpoResponse.ipOrgId,
-        config: licenseConfig,
+        frameworkId: "SPUML-1.0",
+        params: [],
+        licensor: 1,
         txOptions: {
           waitForTransaction: true,
           gasPrice: parseGwei("250"),
@@ -120,17 +265,171 @@ describe("License Functions", () => {
       expect(configureResponse.ipOrgTerms).to.be.a("object");
       expect(configureResponse.ipOrgTerms).not.be.undefined;
 
-      // Create license
-      const licenseCreationParams: LicenseCreation = {
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: createIpoResponse.ipOrgId,
         params: [],
         parentLicenseId: "0",
         ipaId: "0",
+        preHookData: [],
+        postHookData: [],
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
       };
+
+      const response = await expect(client.license.create(createLicenseRequest)).to.not.be.rejected;
+
+      expect(response.txHash).to.be.a("string");
+      expect(response.txHash).not.be.undefined;
+
+      expect(response.licenseId).to.be.a("string");
+      expect(response.licenseId).not.be.undefined;
+    });
+    it("should be able to create an NFT with non-default license parameters", async () => {
+      // 1. Create IPO first
+      // 2. Configure framework
+      // 3. Create license
+
+      const createIpoResponse = await expect(
+        client.ipOrg.create({
+          name: "Alice In Wonderland",
+          symbol: "AIW",
+          owner: senderAddress,
+          ipAssetTypes: ["Story", "Character"],
+          txOptions: {
+            waitForTransaction: true,
+          },
+        }),
+      ).to.not.be.rejected;
+      expect(createIpoResponse.txHash).to.be.a("string");
+      expect(createIpoResponse.txHash).not.empty;
+      expect(createIpoResponse.ipOrgId).to.be.a("string");
+      expect(createIpoResponse.ipOrgId).not.empty;
+
+      // const attributionParam = {
+      //   tag: "Attribution",
+      //   value: {
+      //     interface: "bool",
+      //     data: [true],
+      //   },
+      // };
+      const derivativesParam = {
+        tag: "Derivatives-Allowed",
+        value: {
+          interface: "bool",
+          data: [false],
+        },
+      };
+      // const licenseParameters = [attributionParam];
+      // const licenseParameters = [attributionParam];
+      const licenseParameters = [derivativesParam];
+
+      // Configure license
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: createIpoResponse.ipOrgId,
+        frameworkId: "SPUML-1.0",
+        params: licenseParameters,
+        licensor: LicensorConfigEnum.Source,
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const configureResponse = await client.license.configure(configureLicenseRequest);
+
+      expect(configureResponse.txHash).to.be.a("string");
+      expect(configureResponse.txHash).not.be.undefined;
+
+      expect(configureResponse.ipOrgTerms).to.be.a("object");
+      expect(configureResponse.ipOrgTerms).not.be.undefined;
 
       const createLicenseRequest: CreateLicenseRequest = {
         ipOrgId: createIpoResponse.ipOrgId,
-        // ipOrgId: "0x973748DC37577905a072d3Bf5ea0e8E69547c872",
-        params: licenseCreationParams,
+        params: [],
+        parentLicenseId: "0",
+        ipaId: "0",
+        preHookData: [],
+        postHookData: [],
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const response = await expect(client.license.create(createLicenseRequest)).to.not.be.rejected;
+
+      expect(response.txHash).to.be.a("string");
+      expect(response.txHash).not.be.undefined;
+
+      expect(response.licenseId).to.be.a("string");
+      expect(response.licenseId).not.be.undefined;
+    });
+    it.skip("should be able to create an NFT with 'Attribution'=true", async () => {
+      // 1. Create IPO first
+      // 2. Configure framework
+      // 3. Create license
+
+      const createIpoResponse = await expect(
+        client.ipOrg.create({
+          name: "Alice In Wonderland",
+          symbol: "AIW",
+          owner: senderAddress,
+          ipAssetTypes: ["Story", "Character"],
+          txOptions: {
+            waitForTransaction: true,
+          },
+        }),
+      ).to.not.be.rejected;
+      expect(createIpoResponse.txHash).to.be.a("string");
+      expect(createIpoResponse.txHash).not.empty;
+      expect(createIpoResponse.ipOrgId).to.be.a("string");
+      expect(createIpoResponse.ipOrgId).not.empty;
+
+      // const attributionParam = {
+      //   tag: "Attribution",
+      //   value: {
+      //     interface: "bool",
+      //     data: [true],
+      //   },
+      // };
+      const derivativesParam = {
+        tag: "Derivatives-Allowed",
+        value: {
+          interface: "bool",
+          data: [false],
+        },
+      };
+      // const licenseParameters = [attributionParam];
+      // const licenseParameters = [attributionParam];
+      const licenseParameters = [derivativesParam];
+
+      // Configure license
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: createIpoResponse.ipOrgId,
+        frameworkId: "SPUML-1.0",
+        params: licenseParameters,
+        licensor: LicensorConfigEnum.Source,
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const configureResponse = await client.license.configure(configureLicenseRequest);
+
+      expect(configureResponse.txHash).to.be.a("string");
+      expect(configureResponse.txHash).not.be.undefined;
+
+      expect(configureResponse.ipOrgTerms).to.be.a("object");
+      expect(configureResponse.ipOrgTerms).not.be.undefined;
+
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: createIpoResponse.ipOrgId,
+        params: [],
+        parentLicenseId: "0",
+        ipaId: "0",
         preHookData: [],
         postHookData: [],
         txOptions: {
