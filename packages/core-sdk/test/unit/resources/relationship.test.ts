@@ -33,31 +33,33 @@ describe("Test RelationshipClient", function () {
         .stub()
         .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
 
-      await expect(
-        relationshipClient.register({
-          ipOrgId: process.env.TEST_IPORG_ID as string,
-          relType: "appears_in",
-          srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
-          srcTokenId: "4",
-          dstContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
-          dstTokenId: "5",
-          preHookData: [
-            {
-              interface: "address",
-              data: ["0xf398C12A45Bc409b6C652E25bb0a3e702492A4ab"],
-            },
-          ],
-          postHookData: [
-            {
-              interface: "address",
-              data: ["0xf398C12A45Bc409b6C652E25bb0a3e702492A4ab"],
-            },
-          ],
-          txOptions: {
-            waitForTransaction: false,
+      const resp = await relationshipClient.register({
+        ipOrgId: process.env.TEST_IPORG_ID as string,
+        relType: "appears_in",
+        srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
+        srcTokenId: "4",
+        dstContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
+        dstTokenId: "5",
+        preHookData: [
+          {
+            interface: "address",
+            data: ["0xf398C12A45Bc409b6C652E25bb0a3e702492A4ab"],
           },
-        }),
-      ).not.to.be.rejected;
+        ],
+        postHookData: [
+          {
+            interface: "address",
+            data: ["0xf398C12A45Bc409b6C652E25bb0a3e702492A4ab"],
+          },
+        ],
+        txOptions: {
+          waitForTransaction: false,
+        },
+      });
+
+      expect(resp.txHash).to.be.equal(
+        "0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997",
+      );
     });
 
     it("should not throw error when registering a relationship and wait for transaction confirmed", async function () {
@@ -84,19 +86,21 @@ describe("Test RelationshipClient", function () {
         ],
       });
 
-      await expect(
-        relationshipClient.register({
-          ipOrgId: process.env.TEST_IPORG_ID as string,
-          relType: "appears_in",
-          srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
-          srcTokenId: "4",
-          dstContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
-          dstTokenId: "5",
-          txOptions: {
-            waitForTransaction: true,
-          },
-        }),
-      ).not.to.be.rejected;
+      const resp = await relationshipClient.register({
+        ipOrgId: process.env.TEST_IPORG_ID as string,
+        relType: "appears_in",
+        srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
+        srcTokenId: "4",
+        dstContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
+        dstTokenId: "5",
+        txOptions: {
+          waitForTransaction: true,
+        },
+      });
+
+      expect(resp.txHash).to.be.equal(
+        "0x6bf8053b1e8ffdc8a767938b14a59eb1e08cf8821743be7f8377e5bad77f76a8",
+      );
     });
 
     it("should throw error when registerRelationship reverts", async function () {
@@ -120,9 +124,8 @@ describe("Test RelationshipClient", function () {
 
     it("should throw error when not found RelationshipCreated event", async function () {
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x6bf8053b1e8ffdc8a767938b14a59eb1e08cf8821743be7f8377e5bad77f76a8");
+      walletMock.writeContract = sinon.stub().rejects(new Error("revert"));
+
       rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
         logs: [
           {
@@ -143,8 +146,8 @@ describe("Test RelationshipClient", function () {
         ],
       });
 
-      try {
-        await relationshipClient.register({
+      await expect(
+        relationshipClient.register({
           ipOrgId: process.env.TEST_IPORG_ID as string,
           relType: "appears_in",
           srcContract: "0x177175a4b26f6EA050676F8c9a14D395F896492C",
@@ -156,11 +159,8 @@ describe("Test RelationshipClient", function () {
           txOptions: {
             waitForTransaction: false,
           },
-        });
-        expect.fail(
-          `Failed to create relationship: not found event RelationshipCreated in target transaction`,
-        );
-      } catch (error) {}
+        }),
+      ).to.be.rejectedWith("Failed to register relationship: revert");
     });
   });
 });
