@@ -30,48 +30,41 @@ describe(`Test IPOrgClient`, function () {
   });
 
   describe("Test ipOrgClient.create", async function () {
+    const txHash = "0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997";
     it("should not throw error when creating a ip Org", async function () {
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      walletMock.writeContract = sinon.stub().resolves(txHash);
 
-      await expect(
-        ipOrgClient.create({
-          name: "Alice In Wonderland",
-          symbol: "AIW",
-          owner: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
-          ipAssetTypes: ["Story", "Character"],
-          txOptions: {
-            waitForTransaction: false,
-          },
-        }),
-      ).not.to.be.rejected;
+      const res = await ipOrgClient.create({
+        name: "Star Wars",
+        symbol: "STAR",
+        owner: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
+        ipAssetTypes: ["Story", "Character"],
+        txOptions: {
+          waitForTransaction: false,
+        },
+      });
+      expect(res.txHash).to.be.equal(txHash);
     });
 
     it("should not throw error when creating a ip Org with ZeroAddress", async function () {
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      walletMock.writeContract = sinon.stub().resolves(txHash);
 
-      await expect(
-        ipOrgClient.create({
-          name: "Alice In Wonderland",
-          symbol: "AIW",
-          ipAssetTypes: ["Story", "Character"],
-          txOptions: {
-            waitForTransaction: false,
-          },
-        }),
-      ).not.to.be.rejected;
+      const res = await ipOrgClient.create({
+        name: "Star Wars",
+        symbol: "STAR",
+        ipAssetTypes: ["Story", "Character"],
+        txOptions: {
+          waitForTransaction: false,
+        },
+      });
+      expect(res.txHash).to.be.equal(txHash);
     });
 
     it("should not throw error when creating a ip Org and wait for transaction confirmed", async function () {
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x6bf8053b1e8ffdc8a767938b14a59eb1e08cf8821743be7f8377e5bad77f76a8");
+      walletMock.writeContract = sinon.stub().resolves(txHash);
       rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
         logs: [
           {
@@ -87,17 +80,17 @@ describe(`Test IPOrgClient`, function () {
           },
         ],
       });
-      await expect(
-        ipOrgClient.create({
-          name: "Alice In Wonderland",
-          symbol: "AIW",
-          owner: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
-          ipAssetTypes: ["Story", "Character"],
-          txOptions: {
-            waitForTransaction: true,
-          },
-        }),
-      ).not.to.be.rejected;
+      const resp = await ipOrgClient.create({
+        name: "Star Wars",
+        symbol: "STAR",
+        owner: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
+        ipAssetTypes: ["Story", "Character"],
+        txOptions: {
+          waitForTransaction: true,
+        },
+      });
+      expect(resp.txHash).to.be.equal(txHash);
+      expect(resp.ipOrgId).to.be.equal("0x0Dad65978B6C637598674ea03B1C6f3333D00f5B");
     });
 
     it("should throw error when registerIPOrg reverts", async function () {
@@ -135,20 +128,19 @@ describe(`Test IPOrgClient`, function () {
           },
         ],
       });
-      try {
-        await ipOrgClient.create({
-          name: "Alice In Wonderland",
-          symbol: "AIW",
+      await expect(
+        ipOrgClient.create({
+          name: "Star Wars",
+          symbol: "STAR",
           owner: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
           ipAssetTypes: ["Story", "Character"],
           txOptions: {
             waitForTransaction: true,
           },
-        });
-        expect.fail(
-          `Failed to create IPOrg: not found event IPOrgRegistered in target transaction`,
-        );
-      } catch (error) {}
+        }),
+      ).to.be.rejectedWith(
+        `Failed to create IPOrg: not found event IPOrgRegistered in target transaction`,
+      );
     });
   });
 });

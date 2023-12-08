@@ -11,7 +11,7 @@ import {
 describe("Transaction client integration tests", function () {
   let client: ReadOnlyClient;
 
-  beforeEach(function () {
+  before(async function () {
     const config: StoryReadOnlyConfig = {};
     client = StoryClient.newReadOnlyClient(config);
   });
