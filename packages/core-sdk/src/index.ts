@@ -14,7 +14,7 @@ export { ModuleReadOnlyClient } from "./resources/moduleReadOnly";
 export { RelationshipClient } from "./resources/relationship";
 export { TransactionClient } from "./resources/transaction";
 export { PlatformClient } from "./utils/platform";
-export { AddressZero } from "./constants/addresses";
+export { AddressZero, HashZero } from "./constants/common";
 
 export type { StoryConfig, StoryReadOnlyConfig } from "./types/config";
 export type { Client, ReadOnlyClient } from "./types/client";
