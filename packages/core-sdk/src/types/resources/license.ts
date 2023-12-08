@@ -25,23 +25,12 @@ export type License = {
 export type ParamValue = {
   tag: string | Uint8Array;
   tagValue: Uint8Array;
-  // tagValue: any;
 };
-// default empty array, 0, 0
+
 export type LicenseCreation = {
   params: ParamValue[]; // ParamValue[]
   parentLicenseId: string;
   ipaId: string; // address
-};
-
-export type CreateLicenseRequest = {
-  ipOrgId: string;
-  params: LicenseCreation;
-  // preHooksCalldata?: Record<string, undefined>[];
-  // postHooksCalldata?: Record<string, undefined>[];
-  preHookData?: Array<TypedData>;
-  postHookData?: Array<TypedData>;
-  txOptions?: TxOptions;
 };
 
 export enum ParameterType {
@@ -63,27 +52,63 @@ export type Framework = {
   paramDefs: ParamDefinition[];
 };
 
-export type AddFrameworkRequest = {
-  framework: Framework;
-  txOptions?: TxOptions;
-};
-/**
- * Represents the request structure for creating a new license NFT (createLicenseNft on StoryProtocol.sol)
- *
- * @public
- */
-export interface CreateLicenseNftRequest extends CreateLicenseRequest {
-  licensee: string;
+export enum LicensorConfig {
+  Unset,
+  IpOrgOwnerAlways,
+  ParentOrIpaOrIpOrgOwners,
 }
 
+export type LicensingConfig = {
+  frameworkId: string;
+  params: ParamValue[];
+  licensor: LicensorConfig;
+};
+
 /**
- * Represents the request structure for creating a new IPA-bound license (createIpaBoundLicense on StoryProtocol.sol)
+ * Represents the response structure for configuring a license using the `license.create` method.
  *
  * @public
  */
-export interface CreateIpaBoundLicenseRequest extends CreateLicenseRequest {
-  ipaId: number;
-}
+export type CreateLicenseRequest = {
+  ipOrgId: string;
+  params: LicenseCreation;
+  // preHooksCalldata?: Record<string, undefined>[];
+  // postHooksCalldata?: Record<string, undefined>[];
+  preHookData?: Array<TypedData>;
+  postHookData?: Array<TypedData>;
+  txOptions?: TxOptions;
+};
+
+/**
+ * Represents the response structure for creating a new license using the `license.create` method.
+ *
+ * @public
+ */
+export type CreateLicenseResponse = {
+  txHash: string; // Transaction hash of the license creation transaction.
+  licenseId?: string;
+};
+
+/**
+ * Represents the response structure for configuring a license using the `license.configure` method.
+ *
+ * @public
+ */
+export type ConfigureLicenseRequest = {
+  ipOrg: string;
+  config: LicensingConfig;
+  txOptions?: TxOptions;
+};
+
+/**
+ * Represents the response structure for creating a new license using the `license.configure` method.
+ *
+ * @public
+ */
+export type ConfigureLicenseResponse = {
+  txHash: string;
+  ipOrgTerms?: object;
+};
 
 /**
  * Represents the request structure for retrieving license details using the `franchise.get` method.
@@ -116,46 +141,4 @@ export type ListLicenseRequest = {
  */
 export type ListLicenseResponse = {
   licenses: License[];
-};
-
-/**
- * Represents the response structure for creating a new license using the `license.create` method.
- *
- * @public
- */
-export type CreateLicenseResponse = {
-  txHash: string; // Transaction hash of the license creation transaction.
-  licenseId?: string;
-};
-
-export type ConfigureLicenseCalldata = {
-  ipOrgId: string;
-  config: LicensingConfig;
-};
-
-export enum LicensorConfig {
-  Unset,
-  IpOrgOwnerAlways,
-  ParentOrIpaOrIpOrgOwners,
-}
-export type LicensingConfig = {
-  frameworkId: string;
-  params: ParamValue[];
-  licensor: LicensorConfig;
-};
-
-/**
- * Represents the response structure for configuring a license using the `license.configure` method.
- *
- * @public
- */
-export type ConfigureLicenseRequest = {
-  ipOrg: string;
-  config: LicensingConfig;
-  txOptions?: TxOptions;
-};
-
-export type ConfigureLicenseResponse = {
-  txHash: string;
-  ipOrgTerms?: object;
 };

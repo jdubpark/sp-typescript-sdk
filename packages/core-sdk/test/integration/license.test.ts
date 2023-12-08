@@ -76,7 +76,7 @@ describe("License Functions", () => {
   });
 
   describe("License creation", async function () {
-    it.only("should be able to create an NFT with empty/default values", async () => {
+    it("should be able to create an NFT with empty/default values", async () => {
       // 1. Create IPO first
       // 2. Configure framework
       // 3. Create license

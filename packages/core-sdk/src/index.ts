@@ -45,11 +45,19 @@ export type {
   License,
   GetLicenseRequest,
   GetLicenseResponse,
-  CreateLicenseNftRequest,
-  CreateIpaBoundLicenseRequest,
+  CreateLicenseRequest,
   CreateLicenseResponse,
+  ConfigureLicenseRequest,
+  ConfigureLicenseResponse,
   ListLicenseRequest,
   ListLicenseResponse,
+  ParamValue,
+  LicenseCreation,
+  ParameterType,
+  ParamDefinition,
+  Framework,
+  LicensorConfig,
+  LicensingConfig,
 } from "./types/resources/license";
 
 export type {
