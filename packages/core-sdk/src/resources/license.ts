@@ -58,28 +58,29 @@ export class LicenseClient extends LicenseReadOnlyClient {
   }
 
   public async configure(request: ConfigureLicenseRequest): Promise<ConfigureLicenseResponse> {
-    const { request: call } = await this.rpcClient.simulateContract({
-      abi: storyProtocolJson,
-      address: getAddress(
-        process.env.STORY_PROTOCOL_CONTRACT! || process.env.NEXT_PUBLIC_STORY_PROTOCOL_CONTRACT!,
-      ),
-      functionName: "configureIpOrgLicensing",
-      args: [request.ipOrg as Address, request.config],
-      account: this.wallet.account,
-    });
-
-    const txHash = await this.wallet.writeContract(call);
-    if (request.txOptions?.waitForTransaction) {
-      const targetLog = await waitTxAndFilterLog(this.rpcClient, txHash, {
-        abi: licensingModuleRaw,
-        eventName: "IpOrgLicensingFrameworkSet",
+    try {
+      const { request: call } = await this.rpcClient.simulateContract({
+        abi: storyProtocolJson,
+        address: getAddress(
+          process.env.STORY_PROTOCOL_CONTRACT! || process.env.NEXT_PUBLIC_STORY_PROTOCOL_CONTRACT!,
+        ),
+        functionName: "configureIpOrgLicensing",
+        args: [request.ipOrg as Address, request.config],
+        account: this.wallet.account,
       });
-      return { txHash: txHash, ipOrgTerms: targetLog?.args };
-    } else {
-      return { txHash: txHash };
+
+      const txHash = await this.wallet.writeContract(call);
+      if (request.txOptions?.waitForTransaction) {
+        const targetLog = await waitTxAndFilterLog(this.rpcClient, txHash, {
+          abi: licensingModuleRaw,
+          eventName: "IpOrgLicensingFrameworkSet",
+        });
+        return { txHash: txHash, ipOrgTerms: targetLog?.args };
+      } else {
+        return { txHash: txHash };
+      }
+    } catch (error: unknown) {
+      handleError(error, "Failed to configure license");
     }
-  }
-  catch(error: unknown) {
-    handleError(error, "Failed to register license");
   }
 }

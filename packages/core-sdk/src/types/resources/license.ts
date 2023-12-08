@@ -24,7 +24,7 @@ export type License = {
 
 export type ParamValue = {
   tag: string | Uint8Array;
-  tagValue: TypedData;
+  tagValue: Uint8Array;
   // tagValue: any;
 };
 // default empty array, 0, 0

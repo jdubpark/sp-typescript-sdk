@@ -1,15 +1,23 @@
-import { expect } from "chai";
-import { LicenseClient, AddressZero } from "../../../src";
+import chai, { expect } from "chai";
 import { AxiosInstance } from "axios";
 import { createMock } from "../testUtils";
 import * as sinon from "sinon";
-import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { PublicClient, WalletClient } from "viem";
+import { PublicClient, WalletClient, Account, parseGwei, toBytes } from "viem";
+import { LicenseClient } from "../../../src";
+import {
+  ConfigureLicenseRequest,
+  CreateLicenseRequest,
+  LicenseCreation,
+  LicensingConfig,
+  ParamValue,
+} from "../../../src/types/resources/license";
+import { mockCreateAndConfigureLicenseLog } from "../utils/mockData";
 
 chai.use(chaiAsPromised);
+chai.config.truncateThreshold = 0;
 
-describe("Test LicenseClient", function () {
+describe(`Test License`, function () {
   let licenseClient: LicenseClient;
   let axiosMock: AxiosInstance;
   let rpcMock: PublicClient;
@@ -19,6 +27,9 @@ describe("Test LicenseClient", function () {
     axiosMock = createMock<AxiosInstance>();
     rpcMock = createMock<PublicClient>();
     walletMock = createMock<WalletClient>();
+    const accountMock = createMock<Account>();
+    accountMock.address = "0x73fcb515cee99e4991465ef586cfe2b072ebb512";
+    walletMock.account = accountMock;
     licenseClient = new LicenseClient(axiosMock, rpcMock, walletMock);
   });
 
@@ -26,187 +37,186 @@ describe("Test LicenseClient", function () {
     sinon.restore();
   });
 
-  describe("Test licenseClient.create", async function () {
-    it("should create a license NFT (don't wait txn)", async function () {
-      rpcMock.readContract = sinon.stub().resolves(AddressZero);
+  describe("Test LicenseClient.create", async function () {
+    it("should be able to create license", async function () {
+      const ipOrgIdMock = "0x973748DC37577905a072d3Bf5ea0e8E69547c872";
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
       walletMock.writeContract = sinon
         .stub()
         .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
+        logs: mockCreateAndConfigureLicenseLog,
+      });
 
-      const createLicenseNftRequest = {
-        ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
-        isCommercial: false,
-        licensee: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
-        preHooksCalldata: [],
-        postHooksCalldata: [],
-        txOptions: {
-          waitForTransaction: false,
-        },
+      // Create license
+      const licenseCreationParams: LicenseCreation = {
+        params: [],
+        parentLicenseId: "0",
+        ipaId: "0",
       };
 
-      const createTxn = await licenseClient.create(createLicenseNftRequest);
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
-    });
-
-    it("should create a license NFT (wait txn)", async function () {
-      rpcMock.readContract = sinon.stub().resolves(AddressZero);
-      rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
-        logs: [
-          {
-            address: "0xa906e2589a7f8385a376babbb70a39dad551603b",
-            topics: [
-              "0x72c6855bff66b2a4daf5a2d61ef3d326f9e7fafd2e7533b78d922b90086b4f3f",
-              "0x0000000000000000000000000000000000000000000000000000000000000014",
-            ],
-            data: "0x",
-            blockNumber: 4747616n,
-            transactionHash: "0x335bcd5601de74a2440b1eda601c633a06022542e98a98bbe3f273443dd30b87",
-            transactionIndex: 69,
-            blockHash: "0xe5a6de427915ad2998f920676a877466fd19e290b326a67b5c8b49a6b5174d2e",
-            logIndex: 134,
-            removed: false,
-          },
-        ],
-      });
-      walletMock.writeContract = sinon
-        .stub()
-        .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
-
-      const createLicenseNftRequest = {
-        ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
-        isCommercial: false,
-        licensee: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
-        preHooksCalldata: [],
-        postHooksCalldata: [],
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: ipOrgIdMock,
+        params: licenseCreationParams,
+        preHookData: [],
+        postHookData: [],
         txOptions: {
           waitForTransaction: true,
         },
       };
 
-      const createTxn = await licenseClient.create(createLicenseNftRequest);
-
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
-      expect(createTxn).to.have.property("licenseId");
-      expect(createTxn.licenseId).to.be.a("string");
+      const createLicenseRes = await expect(licenseClient.create(createLicenseRequest)).not.to.be
+        .rejected;
+      expect(createLicenseRes.licenseId).to.be.a("string");
+      expect(createLicenseRes.licenseId).not.be.undefined;
     });
-
-    it("should create an IPA-bound license (don't wait txn)", async function () {
-      rpcMock.readContract = sinon.stub().resolves(AddressZero);
+    it("should be able to get transaction hash after calling license.create", async function () {
+      const ipOrgIdMock = "0x973748DC37577905a072d3Bf5ea0e8E69547c872";
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
       walletMock.writeContract = sinon
         .stub()
         .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
+        logs: mockCreateAndConfigureLicenseLog,
+      });
 
-      const createIpaBoundLicenseRequest = {
-        ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
-        isCommercial: false,
-        ipaId: 1,
-        preHooksCalldata: [],
-        postHooksCalldata: [],
+      const licenseParams: ParamValue[] = [
+        {
+          tag: "foo",
+          tagValue: toBytes("bar"),
+        },
+      ];
+
+      // Create license
+      const licenseCreationParams: LicenseCreation = {
+        params: licenseParams,
+        parentLicenseId: "0",
+        ipaId: "0",
+      };
+
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: ipOrgIdMock,
+        params: licenseCreationParams,
+        preHookData: [],
+        postHookData: [],
         txOptions: {
           waitForTransaction: false,
         },
       };
 
-      const createTxn = await licenseClient.create(createIpaBoundLicenseRequest);
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
+      const createLicenseRes = await expect(licenseClient.create(createLicenseRequest)).not.to.be
+        .rejected;
+      expect(createLicenseRes.txHash).to.be.a("string");
+      expect(createLicenseRes.txHash).not.be.undefined;
     });
-
-    it("should create an IPA-bound license (wait txn)", async function () {
-      rpcMock.readContract = sinon.stub().resolves(AddressZero);
+    it("should be able to configure license", async function () {
+      const ipOrgIdMock = "0x973748DC37577905a072d3Bf5ea0e8E69547c872";
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
-      rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
-        logs: [
-          {
-            address: "0xa906e2589a7f8385a376babbb70a39dad551603b",
-            topics: [
-              "0x72c6855bff66b2a4daf5a2d61ef3d326f9e7fafd2e7533b78d922b90086b4f3f",
-              "0x0000000000000000000000000000000000000000000000000000000000000014",
-            ],
-            data: "0x",
-            blockNumber: 4747616n,
-            transactionHash: "0x335bcd5601de74a2440b1eda601c633a06022542e98a98bbe3f273443dd30b87",
-            transactionIndex: 69,
-            blockHash: "0xe5a6de427915ad2998f920676a877466fd19e290b326a67b5c8b49a6b5174d2e",
-            logIndex: 134,
-            removed: false,
-          },
-        ],
-      });
       walletMock.writeContract = sinon
         .stub()
         .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
+        logs: mockCreateAndConfigureLicenseLog,
+      });
 
-      const createIpaBoundLicenseRequest = {
-        ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
-        isCommercial: false,
-        ipaId: 1,
-        preHooksCalldata: [],
-        postHooksCalldata: [],
+      // Configure license
+      const licenseConfig: LicensingConfig = {
+        frameworkId: "SPIP-1.0",
+        params: [],
+        licensor: 1,
+      };
+
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: ipOrgIdMock,
+        config: licenseConfig,
         txOptions: {
           waitForTransaction: true,
+          gasPrice: parseGwei("250"),
         },
       };
 
-      const createTxn = await licenseClient.create(createIpaBoundLicenseRequest);
-      expect(createTxn).to.be.a("object");
-      expect(createTxn).to.have.property("txHash");
-      expect(createTxn.txHash).to.be.a("string");
-      expect(createTxn).to.have.property("licenseId");
-      expect(createTxn.licenseId).to.be.a("string");
+      const configureResponse = await licenseClient.configure(configureLicenseRequest);
+
+      expect(configureResponse.ipOrgTerms).to.be.a("object");
+      expect(configureResponse.ipOrgTerms).not.be.undefined;
+    });
+    it("should be able to get transaction hash after calling license.configure", async function () {
+      const ipOrgIdMock = "0x973748DC37577905a072d3Bf5ea0e8E69547c872";
+      rpcMock.simulateContract = sinon.stub().resolves({ request: null });
+      walletMock.writeContract = sinon
+        .stub()
+        .resolves("0x129f7dd802200f096221dd89d5b086e4bd3ad6eafb378a0c75e3b04fc375f997");
+      rpcMock.waitForTransactionReceipt = sinon.stub().resolves({
+        logs: mockCreateAndConfigureLicenseLog,
+      });
+
+      // Configure license
+      const licenseConfig: LicensingConfig = {
+        frameworkId: "SPIP-1.0",
+        params: [],
+        licensor: 1,
+      };
+
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: ipOrgIdMock,
+        config: licenseConfig,
+        txOptions: {
+          waitForTransaction: false,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const configureResponse = await licenseClient.configure(configureLicenseRequest);
+
+      expect(configureResponse.txHash).to.be.a("string");
+      expect(configureResponse.txHash).not.be.undefined;
     });
 
-    it("should throw error when request fails", async function () {
+    it("create should throw error", async () => {
+      const ipOrgIdMock = "0x973748DC37577905a072d3Bf5ea0e8E69547c872";
       rpcMock.simulateContract = sinon.stub().resolves({ request: null });
       walletMock.writeContract = sinon.stub().rejects(new Error("http 500"));
-      const createLicenseNftRequest = {
-        ipOrgId: "1",
-        isCommercial: false,
-        licensee: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
+
+      const licenseCreationParams: LicenseCreation = {
+        params: [],
+        parentLicenseId: "0",
+        ipaId: "0",
+      };
+
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: ipOrgIdMock,
+        params: licenseCreationParams,
+        preHookData: [],
+        postHookData: [],
         txOptions: {
-          waitForTransaction: false,
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
         },
       };
 
-      await expect(licenseClient.create(createLicenseNftRequest)).to.be.rejectedWith("http 500");
+      await expect(licenseClient.create(createLicenseRequest)).to.be.rejectedWith("http 500");
     });
+    it("configure should throw error", async () => {
+      const ipOrgIdMock = "0x973748DC37577905a072d3Bf5ea0e8E69547c872";
+      rpcMock.simulateContract = sinon.stub().resolves({ request: null });
+      walletMock.writeContract = sinon.stub().rejects(new Error("http 500"));
+      // Configure license
+      const licenseConfig: LicensingConfig = {
+        frameworkId: "SPIP-1.0",
+        params: [],
+        licensor: 1,
+      };
 
-    it("should throw error when invalid franchise ID is provided", async function () {
-      rpcMock.readContract = sinon.stub().resolves(AddressZero);
-      rpcMock.simulateContract = sinon.stub().rejects();
-      const createLicenseNftRequest = {
-        ipOrgId: "0xB32BdE3fBfddAd30a8d824178F00F0adB43DF2e7",
-        isCommercial: false,
-        licensee: "0x4f9693ac46f2c7e2f48dd14d8fe1ab44192cd57d",
-        preHooksCalldata: [],
-        postHooksCalldata: [],
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: ipOrgIdMock,
+        config: licenseConfig,
         txOptions: {
-          waitForTransaction: false,
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
         },
       };
 
-      await expect(licenseClient.create(createLicenseNftRequest)).to.be.rejectedWith(
-        "Failed to register license: Error",
-      );
-    });
-
-    it("should throw error when request object is invalid", async function () {
-      rpcMock.readContract = sinon.stub().resolves(AddressZero);
-      rpcMock.simulateContract = sinon.stub().rejects();
-      const createLicenseNftRequest = {
-        foo: "bar",
-      };
-
-      //@ts-ignore
-      await expect(licenseClient.create(createLicenseNftRequest)).to.be.rejected;
+      await expect(licenseClient.configure(configureLicenseRequest)).to.be.rejectedWith("http 500");
     });
   });
 });

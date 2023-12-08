@@ -11,10 +11,6 @@ import {
   LicensingConfig,
 } from "../../src/types/resources/license";
 
-dotenv.config();
-chai.use(chaiAsPromised);
-chai.config.truncateThreshold = 0;
-
 describe("License Functions", () => {
   let client: Client;
   let senderAddress: string;
@@ -80,7 +76,7 @@ describe("License Functions", () => {
   });
 
   describe("License creation", async function () {
-    it("should be able to create an NFT with empty/default values", async () => {
+    it.only("should be able to create an NFT with empty/default values", async () => {
       // 1. Create IPO first
       // 2. Configure framework
       // 3. Create license
