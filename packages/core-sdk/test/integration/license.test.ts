@@ -35,46 +35,8 @@ describe("License Functions", () => {
     client = StoryClient.newClient(config);
   });
 
-  describe("License creation", async function () {
-    it.only("should be able to create an NFT with empty/default values", async () => {
-      const licenseCreationParams: LicenseCreation = {
-        params: [],
-        parentLicenseId: "0",
-        ipaId: "0",
-      };
-
-      const createLicenseRequest: CreateLicenseRequest = {
-        ipOrgId: "0x35d3f0B8711Df409dd996154eE82c1A4332E5Fc8", // shared wallet
-        // ipOrgId: "0x0cEeeFC9AC23755d8786D4d580E1E7cccc25DE12", // ee2a
-        params: licenseCreationParams,
-        preHookData: [],
-        postHookData: [],
-        txOptions: {
-          waitForTransaction: true,
-          gasPrice: parseGwei("250"),
-        },
-      };
-
-      const response = await expect(client.license.create(createLicenseRequest)).to.not.be.rejected;
-
-      console.log("response", response);
-      expect(response.txHash).to.be.a("string");
-      expect(response.txHash).not.be.undefined;
-
-      expect(response.licenseId).to.be.a("string");
-      expect(response.licenseId).not.be.undefined;
-    });
-  });
-
   describe("Configuring license", async function () {
-    it.only("should be able to configure license with default values", async () => {
-      /*
-					Since an IPO's framework can only be configured once,
-					we need to create new ones for the test
-
-					1. Create new IPO
-					2. Configure license
-			*/
+    it("should be able to configure license with default values", async () => {
       const waitForTransaction: boolean = true;
       const createIpoResponse = await expect(
         client.ipOrg.create({
@@ -87,7 +49,6 @@ describe("License Functions", () => {
           },
         }),
       ).to.not.be.rejected;
-      console.log("createIpoResponse", createIpoResponse);
       expect(createIpoResponse.txHash).to.be.a("string");
       expect(createIpoResponse.txHash).not.empty;
       expect(createIpoResponse.ipOrgId).to.be.a("string");
@@ -104,19 +65,94 @@ describe("License Functions", () => {
         ipOrg: createIpoResponse.ipOrgId,
         config: licenseConfig,
         txOptions: {
-          waitForTransaction: false,
+          waitForTransaction: true,
           gasPrice: parseGwei("250"),
         },
       };
 
-      // const response = await client.license.configure(configureLicenseRequest);
-      // console.log("response", response);
+      const response = await client.license.configure(configureLicenseRequest);
+      console.log("response", response);
 
-      // expect(response.txHash).to.be.a("string");
-      // expect(response.txHash).not.be.undefined;
+      expect(response.txHash).to.be.a("string");
+      expect(response.txHash).not.be.undefined;
 
-      // expect(response.ipOrgTerms).to.be.a("object");
-      // expect(response.ipOrgTerms).not.be.undefined;
+      expect(response.ipOrgTerms).to.be.a("object");
+      expect(response.ipOrgTerms).not.be.undefined;
+    });
+  });
+
+  describe("License creation", async function () {
+    it("should be able to create an NFT with empty/default values", async () => {
+      // 1. Create IPO first
+      // 2. Configure framework
+      // 3. Create license
+
+      const createIpoResponse = await expect(
+        client.ipOrg.create({
+          name: "Alice In Wonderland",
+          symbol: "AIW",
+          owner: senderAddress,
+          ipAssetTypes: ["Story", "Character"],
+          txOptions: {
+            waitForTransaction: true,
+          },
+        }),
+      ).to.not.be.rejected;
+      expect(createIpoResponse.txHash).to.be.a("string");
+      expect(createIpoResponse.txHash).not.empty;
+      expect(createIpoResponse.ipOrgId).to.be.a("string");
+      expect(createIpoResponse.ipOrgId).not.empty;
+
+      // Configure license
+      const licenseConfig: LicensingConfig = {
+        frameworkId: "SPIP-1.0",
+        params: [],
+        licensor: 1,
+      };
+
+      const configureLicenseRequest: ConfigureLicenseRequest = {
+        ipOrg: createIpoResponse.ipOrgId,
+        config: licenseConfig,
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const configureResponse = await client.license.configure(configureLicenseRequest);
+
+      expect(configureResponse.txHash).to.be.a("string");
+      expect(configureResponse.txHash).not.be.undefined;
+
+      expect(configureResponse.ipOrgTerms).to.be.a("object");
+      expect(configureResponse.ipOrgTerms).not.be.undefined;
+
+      // Create license
+      const licenseCreationParams: LicenseCreation = {
+        params: [],
+        parentLicenseId: "0",
+        ipaId: "0",
+      };
+
+      const createLicenseRequest: CreateLicenseRequest = {
+        ipOrgId: createIpoResponse.ipOrgId,
+        // ipOrgId: "0x973748DC37577905a072d3Bf5ea0e8E69547c872",
+        params: licenseCreationParams,
+        preHookData: [],
+        postHookData: [],
+        txOptions: {
+          waitForTransaction: true,
+          gasPrice: parseGwei("250"),
+        },
+      };
+
+      const response = await expect(client.license.create(createLicenseRequest)).to.not.be.rejected;
+
+      expect(response.txHash).to.be.a("string");
+      expect(response.txHash).not.be.undefined;
+
+      expect(response.licenseId).to.be.a("string");
+      expect(response.licenseId).not.be.undefined;
     });
   });
 });
