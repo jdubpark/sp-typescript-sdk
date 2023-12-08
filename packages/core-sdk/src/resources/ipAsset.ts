@@ -7,6 +7,7 @@ import { IPAssetReadOnlyClient } from "./ipAssetReadOnly";
 import { storyProtocolConfig } from "../abi/storyProtocol.abi";
 import { registrationModuleConfig } from "../abi/registrationModule.abi";
 import { parseToBigInt, waitTxAndFilterLog, typedDataArrayToBytesArray } from "../utils/utils";
+import { HashZero } from "../constants/common";
 
 /**
  * IpAssetClient allows you to create, view, and search IP Assets on Story Protocol.
@@ -36,9 +37,7 @@ export class IPAssetClient extends IPAssetReadOnlyClient {
             owner: getAddress(request.owner || this.wallet.account!.address),
             name: request.name,
             ipOrgAssetType: parseToBigInt(request.typeIndex),
-            hash:
-              request.contentHash ||
-              "0x0000000000000000000000000000000000000000000000000000000000000000",
+            hash: request.contentHash || HashZero,
             mediaUrl: request.mediaUrl || "",
           },
           request.preHookData ? typedDataArrayToBytesArray(request.preHookData) : [],
